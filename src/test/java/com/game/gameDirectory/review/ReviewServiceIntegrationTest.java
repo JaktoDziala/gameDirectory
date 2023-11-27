@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +34,7 @@ public class ReviewServiceIntegrationTest {
     }
 
     @Test
-    void addReview_WithValidDto_PatchesRating() {
+    void addReview_WithValidDTO_PatchesRating() {
         // given
         Game game = new Game();
         gameService.addGame(game);
@@ -42,12 +44,12 @@ public class ReviewServiceIntegrationTest {
         final float previousRating = game.getRating();
         final int previousReviewCount = game.getReviewCount();
 
-        ReviewDto reviewDto = new ReviewDto(
+        ReviewDTO reviewDTO = new ReviewDTO(
                 game.getId(), comment, rating
         );
 
         // when
-        sut.addReview(reviewDto);
+        sut.addReview(reviewDTO);
 
         List<Review> reviewList = sut.getReviews();
         Game same = gameService.getGame(1);
@@ -68,8 +70,8 @@ public class ReviewServiceIntegrationTest {
         // given
         Game game = new Game();
         gameService.addGame(game);
-        ReviewDto reviewDto = new ReviewDto(game.getId(), "xd", 3);
-        sut.addReview(reviewDto);
+        ReviewDTO reviewDTO = new ReviewDTO(game.getId(), "xd", 3);
+        sut.addReview(reviewDTO);
         // always null
         List<Review> reviewsBeforeDelete = gameService.getGame(game.getId()).getReviews();
         // when

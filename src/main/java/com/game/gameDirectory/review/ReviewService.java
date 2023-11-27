@@ -18,7 +18,7 @@ class ReviewService {
         this.gameService = gameService;
     }
 
-    void addReview(ReviewDto review){
+    void addReview(ReviewDTO review){
         Game game = gameService.getGame(review.getGameId());
         gameService.patchRating(game, review.getRating());
         reviewRepository.save(

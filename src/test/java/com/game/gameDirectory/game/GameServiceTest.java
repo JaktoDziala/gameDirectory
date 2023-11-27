@@ -1,5 +1,6 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,6 +93,14 @@ class GameServiceTest {
 
         // then
         verify(gameRepository).deleteById(1);
+    }
+
+    @Test
+    void deleteGame_WithNullObject_ThrowsException() throws NullObjectException {
+        // given
+        // when
+        // then
+        assertThrows(NullObjectException.class, () -> sut.deleteGame(null));
     }
 
     @Test

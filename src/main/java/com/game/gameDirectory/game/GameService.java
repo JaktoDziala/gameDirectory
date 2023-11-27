@@ -1,5 +1,6 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
 import org.springframework.stereotype.Service;
@@ -64,11 +65,11 @@ public class GameService {
         gameRepository.findById(gameId).orElseThrow(() -> new ObjectNotFoundException("Game with id " + gameId + " could not be found for deletion!"));
         gameRepository.deleteById(gameId);
     }
-
-    // TODO: Add unit test that checks nullability
     public void deleteGame(Game game) {
         if (game != null) {
             deleteGame(game.getId());
+        }else {
+            throw new NullObjectException(Game.class);
         }
     }
 
