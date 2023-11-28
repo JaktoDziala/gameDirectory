@@ -147,7 +147,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_WithValidRating_ShouldAddRating() {
+    void patchRating_WithValidRating_AddsRating() {
         // given
         int validPartialRating = 10;
         when(gameRepository.findById(validGameId)).thenReturn(Optional.of(new Game()));
@@ -160,7 +160,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_AfterAddingValidRatings_ShouldReturnMeanOfRatings() {
+    void patchRating_AfterAddingValidRatings_ReturnsMeanOfRatings() {
         // given
         int validPartialRatingFirst = 6;
         int validPartialRatingSecond = 7;
@@ -175,7 +175,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_AfterAddingValidRatings_ShouldIncreaseReviewCount() {
+    void patchRating_AfterAddingValidRatings_IncreasesReviewCount() {
         // given
         int validPartialRatingFirst = 6;
         int validPartialRatingSecond = 7;
@@ -191,7 +191,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_WithInvalidRating_ShouldNotIncreaseReviewCount() throws OutOfBoundsRatingException {
+    void patchRating_WithInvalidRating_DoesNotIncreaseReviewCount() throws OutOfBoundsRatingException {
         // given
         int invalidRatingLowerEnd = 0;
         Game game = new Game();

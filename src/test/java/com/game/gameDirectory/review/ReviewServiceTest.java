@@ -14,7 +14,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +25,6 @@ class ReviewServiceTest {
     private ReviewRepository reviewRepository;
     @Mock
     private GameService gameService;
-
     private final int validId = 1;
     private final int invalidId = -1;
     private final int validRating = 2;
@@ -108,20 +106,36 @@ class ReviewServiceTest {
     }
 
     @Test
+    void getReviews_GetsAllReviews() {
+        // given
+        // when
+        sut.getReviews();
+        // then
+        verify(reviewRepository).findAll();
+    }
+
+    @Test
     void deleteReview_WithValidReview_DeletesReviewAndRemovesGameRating() {
         // given
-        ReviewService spySUT = Mockito.spy(sut);
-        Review review = new Review(new Game(), validComment, validRating);
-        review.setId(validId); // Set an appropriate review ID
+        final int firstRating = 9;
+        final int reviewCount = 2;
+        final float initialRating = (float) (firstRating + validRating) / 2;
+        final float expectedRating = firstRating;
 
-        doReturn(review).when(spySUT).getReview(validId);
+        Game game = new Game();
+        game.setReviewCount(reviewCount);
+        game.setRating(initialRating);
+        Review review = new Review(game, validComment, validRating);
+        review.setId(validId);
+        when(reviewRepository.findById(validId)).thenReturn(Optional.of(review));
 
         // when
-        spySUT.deleteReview(review);
+        sut.deleteReview(review);
 
         // then
         verify(reviewRepository).delete(review);
-        verify(spySUT).removeGameRating(validId);
+        assertEquals(expectedRating, game.getRating());
+        assertEquals(reviewCount-1, game.getReviewCount());
     }
 
     @Test
@@ -138,21 +152,86 @@ class ReviewServiceTest {
         verify(reviewRepository).delete(review);
     }
 
-
-    // TODO: Finish test cases
     @Test
-    void testDeleteReview() {
+    void deleteAll_deletesAllReviews() {
+        // given
+        // when
+        sut.deleteAll();
+
+        // then
+        verify(reviewRepository).deleteAll();
     }
 
     @Test
-    void deleteAll() {
+    void removeGameRating_WithValidId_RemovesGameRating() {
+        // given
+        final int firstRating = 10;
+        final int secondRating = 5;
+        final int initialReviewCount = 2;
+        final float initialRating = (float) (firstRating + secondRating) / initialReviewCount;
+
+        Game game = new Game();
+        game.setReviewCount(initialReviewCount);
+        game.setRating(initialRating);
+
+        Review review = new Review(game, validComment, secondRating);
+
+        when(reviewRepository.findById(validId)).thenReturn(Optional.of(review));
+
+        // when
+        sut.removeGameRating(validId);
+
+        // then
+        assertEquals(firstRating, game.getRating());
+        assertEquals(initialReviewCount-1, game.getReviewCount());
     }
 
     @Test
-    void removeGameRating() {
+    void removeGameRating_WithValidIdAndOneRating_SetsGameRatingToZero() {
+        // given
+        final int firstRating = 10;
+        final int initialReviewCount = 1;
+        final float initialRating = (float) (firstRating) / initialReviewCount;
+
+        Game game = new Game();
+        game.setReviewCount(initialReviewCount);
+        game.setRating(initialRating);
+
+        Review review = new Review(game, validComment, firstRating);
+
+        when(reviewRepository.findById(validId)).thenReturn(Optional.of(review));
+
+        // when
+        sut.removeGameRating(validId);
+
+        // then
+        assertEquals(0, game.getRating());
+        assertEquals(initialReviewCount-1, game.getReviewCount());
     }
 
     @Test
-    void getReviews() {
+    void removeGameRating_WithValidId_KeepsRatingAsFloat() {
+        // given
+        final int firstRating = 10;
+        final int secondRating = 9;
+        final int thirdRating = 8;
+        final int initialReviewCount = 3;
+        final float initialRating = (float) (firstRating+secondRating+thirdRating) / initialReviewCount;
+        final float expectedRating = (float) (firstRating + secondRating) / (initialReviewCount-1);
+
+        Game game = new Game();
+        game.setReviewCount(initialReviewCount);
+        game.setRating(initialRating);
+
+        Review review = new Review(game, validComment, thirdRating);
+
+        when(reviewRepository.findById(validId)).thenReturn(Optional.of(review));
+
+        // when
+        sut.removeGameRating(validId);
+
+        // then
+        assertEquals(expectedRating, game.getRating());
+        assertEquals(initialReviewCount-1, game.getReviewCount());
     }
 }
