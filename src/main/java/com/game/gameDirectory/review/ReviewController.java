@@ -1,6 +1,7 @@
 package com.game.gameDirectory.review;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +22,18 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping("add")
-    ResponseEntity<HttpStatus> addReview(@RequestBody ReviewDTO review){
+    @PostMapping(value = "/add")
+    public ResponseEntity<HttpStatus> addReview(@RequestBody ReviewDTO review) {
         reviewService.addReview(review);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("all")
     ResponseEntity<List<Review>> getReviews(){
-        return new ResponseEntity<>(reviewService.getReviews(), HttpStatus.CREATED);
+        return new ResponseEntity<>(reviewService.getReviews(), HttpStatus.OK);
     }
 
-    @GetMapping("id")
+    @GetMapping("{id}")
     ResponseEntity<Review> getReview(@PathVariable int id){
         return new ResponseEntity<>(reviewService.getReview(id), HttpStatus.OK);
     }
@@ -41,12 +42,12 @@ public class ReviewController {
     @DeleteMapping("delete/{id}")
     ResponseEntity<HttpStatus> deleteReview(@PathVariable int id){
         reviewService.deleteReview(id);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("delete/all")
     ResponseEntity<HttpStatus> deleteReviews(){
         reviewService.deleteAll();
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

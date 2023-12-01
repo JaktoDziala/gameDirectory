@@ -47,8 +47,6 @@ class ReviewService {
         reviewRepository.deleteAll();
     }
 
-    // TODO: Add unit test
-    // TODO: Add unit test for deleting last review
     void removeGameRating(int reviewId){
         Review review = getReview(reviewId);
         Game game = review.getGame();
