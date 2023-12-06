@@ -1,34 +1,30 @@
 package com.game.gameDirectory.review;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewControllerTest {
 
-    // TODO: EXTEND TESTS to check more than response status
     private MockMvc mockMvc;
 
-    // TODO: Handle controller tests
     @InjectMocks
     private ReviewController sut;
     @Mock
@@ -44,6 +40,16 @@ class ReviewControllerTest {
     }
 
     @Test
+    void getReviews() throws Exception {
+        List<Review> reviews = new ArrayList<>();
+        when(reviewService.getReviews()).thenReturn(reviews);
+
+        mockMvc.perform(get("/v1/review/all"))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
     void addReview() throws Exception{
         ReviewDTO review = new ReviewDTO(validId, validComment, validRating); // Create a ReviewDTO with necessary data
         String reviewJson = new ObjectMapper().writeValueAsString(review);
@@ -54,15 +60,7 @@ class ReviewControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    void getReviews() throws Exception {
-        List<Review> reviews = new ArrayList<>();
-        when(reviewService.getReviews()).thenReturn(reviews);
 
-        mockMvc.perform(get("/v1/review/all"))
-                .andExpect(status().isOk());
-
-    }
 
     @Test
     void getReview() throws Exception {
