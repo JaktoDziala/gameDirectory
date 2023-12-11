@@ -1,5 +1,4 @@
 package com.game.gameDirectory.review;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micrometer.common.util.StringUtils;
 import lombok.Getter;
@@ -14,7 +13,6 @@ class ReviewDTO {
     private final String comment;
     private final Integer rating;
 
-    @JsonCreator
     public ReviewDTO(@JsonProperty("gameId") Integer gameId,
                      @JsonProperty("comment") String comment,
                      @JsonProperty("rating") Integer rating) {

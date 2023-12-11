@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("v1/game/")
 class GameController {
     private final GameService gameService;
-    // TODO: ADD CONTROLLER UNIT TESTS
+
     public GameController(GameService gameService) {
         this.gameService = gameService;
     }

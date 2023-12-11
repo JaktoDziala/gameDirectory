@@ -27,16 +27,15 @@ public class ReviewController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("all")
-    ResponseEntity<List<Review>> getReviews(){
-        return new ResponseEntity<>(reviewService.getReviews(), HttpStatus.OK);
-    }
-
     @GetMapping("{id}")
     ResponseEntity<Review> getReview(@PathVariable int id){
         return new ResponseEntity<>(reviewService.getReview(id), HttpStatus.OK);
     }
 
+    @GetMapping("all")
+    ResponseEntity<List<Review>> getReviews(){
+        return new ResponseEntity<>(reviewService.getReviews(), HttpStatus.OK);
+    }
 
     @DeleteMapping("delete/{id}")
     ResponseEntity<HttpStatus> deleteReview(@PathVariable int id){

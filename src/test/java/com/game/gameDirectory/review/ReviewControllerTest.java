@@ -1,6 +1,6 @@
 package com.game.gameDirectory.review;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.game.gameDirectory.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,46 +36,36 @@ class ReviewControllerTest {
     }
 
     @Test
-    void getReviews() throws Exception {
-        List<Review> reviews = new ArrayList<>();
-        when(reviewService.getReviews()).thenReturn(reviews);
-
-        mockMvc.perform(get("/v1/review/all"))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    void addReview() throws Exception{
+    void addReview_withValidObject_returnsStatusCode201() throws Exception{
         ReviewDTO review = new ReviewDTO(validId, validComment, validRating); // Create a ReviewDTO with necessary data
-        String reviewJson = new ObjectMapper().writeValueAsString(review);
-
         mockMvc.perform(post("/v1/review/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(reviewJson))
+                        .content(JsonUtil.marshalJson(review)))
                 .andExpect(status().isCreated());
     }
 
-
-
     @Test
-    void getReview() throws Exception {
+    void getReview_withValidId_returnsStatusCode200() throws Exception {
         Review expectedReview = new Review();
-        expectedReview.setId(1);
-        when(reviewService.getReview(validId)).thenReturn(expectedReview);
-
+        expectedReview.setId(validId);
         mockMvc.perform(get("/v1/review/" + validId))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void deleteReview() throws Exception {
+    void getReviews_returnsStatusCode200() throws Exception {
+        mockMvc.perform(get("/v1/review/all"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteReview_withValidId_returnsStatusCode204() throws Exception {
         mockMvc.perform(delete("/v1/review/delete/" + validId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    void deleteReviews() throws Exception {
+    void deleteReviews_withValidId_returnsStatusCode204() throws Exception {
         mockMvc.perform(delete("/v1/review/delete/all"))
                 .andExpect(status().isNoContent());
     }
