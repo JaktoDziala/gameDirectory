@@ -2,6 +2,7 @@ package com.game.gameDirectory.game;
 
 import com.game.gameDirectory.platform.Platform;
 import com.game.gameDirectory.review.Review;
+import com.game.gameDirectory.studio.Studio;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,12 +40,15 @@ public class Game {
     private Integer reviewCount = 0;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
+    @ManyToOne
+    private Studio studio;
 
-    public Game(String title, String description, Date releaseDate, Platform platform) {
+    public Game(String title, String description, Date releaseDate, Platform platform, Studio studio) {
         this.title = title;
         this.description = description;
         this.releaseDate = releaseDate;
         this.platform = platform;
+        this.studio = studio;
     }
 
     public List<Review> getReviews(){
