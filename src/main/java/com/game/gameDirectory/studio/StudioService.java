@@ -15,8 +15,12 @@ class StudioService {
     }
 
 
-    void addStudio(Studio studio) {
-        studioRepository.save(studio);
+    void addStudio(StudioDTO studioDTO) {
+        studioRepository.save(
+                new Studio(
+                        studioDTO.description(),
+                        studioDTO.games()
+                ));
     }
 
     Studio getStudio(int id) {

@@ -33,13 +33,13 @@ class StudioServiceTest {
     @Test
     void addStudio_withValidObject_addsStudio() {
         // given
-        Studio studio = new Studio();
+        StudioDTO studioDTO = new StudioDTO(validDescription, null);
 
         // when
-        sut.addStudio(studio);
+        sut.addStudio(studioDTO);
 
         // then
-        verify(studioRepository).save(studio);
+        verify(studioRepository).save(Mockito.any(Studio.class));
     }
 
     @Test
