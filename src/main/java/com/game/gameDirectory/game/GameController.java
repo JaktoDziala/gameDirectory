@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -34,33 +35,38 @@ class GameController {
         return new ResponseEntity<>(gameService.getGame(gameId), HttpStatus.OK);
     }
 
+    // TODO: Replcae ResponseEntity with @ResponseStatus where possible and write unit test to check limitations
+    @GetMapping("second/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    Game getGame2(@PathVariable Integer gameId){
+        return gameService.getGame(gameId);
+    }
+
     @GetMapping("all")
     ResponseEntity<List<Game>> getGames(){
         return new ResponseEntity<>(gameService.getGames(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{gameId}")
+    @DeleteMapping("{gameId}")
     ResponseEntity<HttpStatus> deleteGame(@PathVariable Integer gameId){
         gameService.deleteGame(gameId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/delete/all")
+    @DeleteMapping("all")
     ResponseEntity<HttpStatus> deleteAll(){
         gameService.deleteAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/update/{gameId}")
+    @PutMapping("{gameId}")
     ResponseEntity<Game> updateGame(@PathVariable Integer gameId, @RequestBody Game game){
         gameService.updateGame(gameId, game);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
-    @PatchMapping("/patch/rating/{gameId}")
+    @PatchMapping("rating/{gameId}")
     ResponseEntity<Float> patchGameRating(@PathVariable int gameId, @RequestParam int rating){
         return new ResponseEntity<>(gameService.patchRating(gameId, rating), HttpStatus.OK);
     }
-
-
 }

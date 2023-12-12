@@ -51,8 +51,6 @@ public class ReviewServiceIntegrationTest {
         // when
         sut.addReview(reviewDTO);
 
-        List<Review> reviewList = sut.getReviews();
-        Game same = gameService.getGame(1);
         // then
         assertEquals(previousReviewCount + 1, game.getReviewCount());
         assertEquals((previousRating * previousReviewCount + rating) / (previousReviewCount + 1), game.getRating());
@@ -65,7 +63,7 @@ public class ReviewServiceIntegrationTest {
     // TODO: Add unit test and integration test that checks if reviews are added to game
     @Disabled
     @Test
-    @Transactional
+    // @Transactional
     void deleteReview_WithValidId_doesNotDeletesGameOfReview(){
         // given
         Game game = new Game();

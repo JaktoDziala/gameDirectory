@@ -14,6 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,12 +37,16 @@ public class Game {
     private Float rating = 0.f;
     private Integer reviewCount = 0;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     public Game(String title, String description, Date releaseDate, Platform platform) {
         this.title = title;
         this.description = description;
         this.releaseDate = releaseDate;
         this.platform = platform;
+    }
+
+    public List<Review> getReviews(){
+        return Collections.unmodifiableList(reviews);
     }
 }

@@ -14,15 +14,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/review")
-public class ReviewController {
+class ReviewController {
 
-    ReviewService reviewService;
+    private final ReviewService reviewService;
+
     public ReviewController(ReviewService reviewService){
         this.reviewService = reviewService;
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<HttpStatus> addReview(@RequestBody ReviewDTO review) {
+    ResponseEntity<HttpStatus> addReview(@RequestBody ReviewDTO review) {
         reviewService.addReview(review);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -37,13 +38,13 @@ public class ReviewController {
         return new ResponseEntity<>(reviewService.getReviews(), HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     ResponseEntity<HttpStatus> deleteReview(@PathVariable int id){
         reviewService.deleteReview(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("delete/all")
+    @DeleteMapping("all")
     ResponseEntity<HttpStatus> deleteReviews(){
         reviewService.deleteAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

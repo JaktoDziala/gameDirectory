@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class GameService {
-    GameRepository gameRepository;
+    private final GameRepository gameRepository;
 
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
@@ -62,7 +62,7 @@ public class GameService {
     }
 
     public void deleteGame(int gameId) {
-        gameRepository.findById(gameId).orElseThrow(() -> new ObjectNotFoundException("Game with id " + gameId + " could not be found for deletion!"));
+        getGame(gameId);
         gameRepository.deleteById(gameId);
     }
     public void deleteGame(Game game) {

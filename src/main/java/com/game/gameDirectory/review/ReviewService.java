@@ -10,8 +10,8 @@ import java.util.List;
 @Service
 class ReviewService {
 
-    ReviewRepository reviewRepository;
-    GameService gameService;
+    private final ReviewRepository reviewRepository;
+    private final GameService gameService;
 
     public ReviewService(ReviewRepository reviewRepository, GameService gameService){
         this.reviewRepository = reviewRepository;
@@ -19,10 +19,10 @@ class ReviewService {
     }
 
     void addReview(ReviewDTO review){
-        Game game = gameService.getGame(review.getGameId());
-        gameService.patchRating(game, review.getRating());
+        Game game = gameService.getGame(review.gameId());
+        gameService.patchRating(game, review.rating());
         reviewRepository.save(
-                new Review(game, review.getComment(), review.getRating()));
+                new Review(game, review.comment(), review.rating()));
     }
 
     Review getReview(int reviewId){
@@ -61,5 +61,4 @@ class ReviewService {
         game.setRating(newRating);
         game.setReviewCount(game.getReviewCount() - 1);
     }
-
 }

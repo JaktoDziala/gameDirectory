@@ -1,5 +1,7 @@
 package com.game.gameDirectory.review;
 
+import com.game.gameDirectory.exceptions.GlobalExceptionHandler;
+import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,13 +62,13 @@ class ReviewControllerTest {
 
     @Test
     void deleteReview_withValidId_returnsStatusCode204() throws Exception {
-        mockMvc.perform(delete("/v1/review/delete/" + validId))
+        mockMvc.perform(delete("/v1/review/" + validId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void deleteReviews_withValidId_returnsStatusCode204() throws Exception {
-        mockMvc.perform(delete("/v1/review/delete/all"))
+        mockMvc.perform(delete("/v1/review/all"))
                 .andExpect(status().isNoContent());
     }
 }

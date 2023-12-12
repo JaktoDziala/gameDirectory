@@ -1,5 +1,6 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -56,19 +58,19 @@ public class GameControllerTest {
 
     @Test
     void deleteGame_withValidId_returnsStatusCode204() throws Exception {
-        mockMvc.perform(delete("/v1/game/delete/" + validId))
+        mockMvc.perform(delete("/v1/game/" + validId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void deleteAll_withValidId_returnsStatusCode204() throws Exception {
-        mockMvc.perform(delete("/v1/game/delete/all"))
+        mockMvc.perform(delete("/v1/game/all"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void updateGame_withValidId_returnsStatusCode200() throws Exception {
-        mockMvc.perform(put("/v1/game/update/" + validId)
+        mockMvc.perform(put("/v1/game/" + validId)
                         .content(JsonUtil.marshalJson(new Game()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -77,7 +79,7 @@ public class GameControllerTest {
     @Test
     void patchGameRating_withValidId_returnsStatusCode200() throws Exception {
         final int validRating = 5;
-        mockMvc.perform(patch("/v1/game/patch/rating/{gameId}", validId)
+        mockMvc.perform(patch("/v1/game/rating/{gameId}", validId)
                         .param("rating", String.valueOf(validRating)))
                 .andExpect(status().isOk());
     }

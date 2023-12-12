@@ -44,7 +44,7 @@ class ReviewServiceTest {
 
         // then
         verify(reviewRepository).save(Mockito.any());
-        verify(gameService).patchRating(game, reviewDTO.getRating());
+        verify(gameService).patchRating(game, reviewDTO.rating());
     }
 
     @Test
