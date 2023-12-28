@@ -12,7 +12,7 @@ public class StudioController {
 
     public StudioController(StudioService studioService) { this.studioService = studioService; }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("add")
     void addGame(@RequestBody StudioDTO studioDTO) {
         studioService.addStudio(studioDTO);
@@ -32,13 +32,13 @@ public class StudioController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
-    void updateStudio(int id, @RequestBody StudioDTO studioDTO) {
+    void updateStudio(@PathVariable int id, @RequestBody StudioDTO studioDTO) {
         studioService.updateStudio(id, studioDTO);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    void deleteStudio(int id) {
+    void deleteStudio(@PathVariable int id) {
         studioService.deleteStudio(id);
     }
 
