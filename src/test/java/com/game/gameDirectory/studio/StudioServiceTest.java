@@ -36,10 +36,12 @@ class StudioServiceTest {
         StudioDTO studioDTO = new StudioDTO(validDescription, null);
 
         // when
-        sut.addStudio(studioDTO);
+        Studio result =  sut.addStudio(studioDTO);
 
         // then
         verify(studioRepository).save(Mockito.any(Studio.class));
+        assertEquals(validDescription, result.getDescription());
+        assertNull(result.getGames());
     }
 
     @Test

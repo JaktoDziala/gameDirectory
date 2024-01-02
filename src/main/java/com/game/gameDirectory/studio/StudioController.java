@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("v1/studio")
 public class StudioController {
@@ -12,39 +14,36 @@ public class StudioController {
 
     public StudioController(StudioService studioService) { this.studioService = studioService; }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("add")
-    void addGame(@RequestBody StudioDTO studioDTO) {
-        studioService.addStudio(studioDTO);
+    ResponseEntity<Studio> addStudio(@RequestBody StudioDTO studioDTO) {
+        return new ResponseEntity<>(studioService.addStudio(studioDTO), HttpStatus.CREATED);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("{id}")
-    void getStudio(@PathVariable int id) {
-        studioService.getStudio(id);
+    ResponseEntity<Studio> getStudio(@PathVariable int id) {
+        return new ResponseEntity<>(studioService.getStudio(id), HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("all")
-    void getStudios() {
-        studioService.getStudios();
+    ResponseEntity<List<Studio>> getStudios() {
+        return new ResponseEntity<>(studioService.getStudios(), HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("{id}")
-    void updateStudio(@PathVariable int id, @RequestBody StudioDTO studioDTO) {
+    ResponseEntity<HttpStatus> updateStudio(@PathVariable int id, @RequestBody StudioDTO studioDTO) {
         studioService.updateStudio(id, studioDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    void deleteStudio(@PathVariable int id) {
+    ResponseEntity<HttpStatus> deleteStudio(@PathVariable int id) {
         studioService.deleteStudio(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("all")
-    void deleteStudios() {
+    ResponseEntity<HttpStatus> deleteStudios() {
         studioService.deleteStudios();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

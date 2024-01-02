@@ -14,13 +14,14 @@ class StudioService {
         this.studioRepository = studioRepository;
     }
 
+    Studio addStudio(StudioDTO studioDTO) {
+        Studio studio = new Studio(
+                studioDTO.description(),
+                studioDTO.games()
+        );
 
-    void addStudio(StudioDTO studioDTO) {
-        studioRepository.save(
-                new Studio(
-                        studioDTO.description(),
-                        studioDTO.games()
-                ));
+        studioRepository.save(studio);
+        return studio;
     }
 
     Studio getStudio(int id) {

@@ -2,6 +2,7 @@ package com.game.gameDirectory.studio;
 
 import com.game.gameDirectory.game.GameRepository;
 import com.game.gameDirectory.util.JsonUtil;
+import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -45,34 +48,44 @@ class StudioControllerTest {
     }
 
     @Test
-    void addGame() throws Exception {
+    void addStudio_withValidDTO_returns201StatusCode() throws Exception {
+        Studio studio = new Studio(validDescription, List.of());
+        when(studioService.addStudio(studioDTO)).thenReturn(studio);
         mockMvc.perform(post("/v1/studio/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.marshalJson(studioDTO)))
+                .andExpect(jsonPath("$.description", is(validDescription)))
+                .andExpect(jsonPath("$.games").doesNotExist())
                 .andExpect(status().isCreated());
 
         verify(studioService).addStudio(studioDTO);
     }
 
     @Test
-    void getStudio() throws Exception {
+    void getStudio_withValidId_returns200StatusCode() throws Exception {
         Studio studio = new Studio();
         studio.setDescription(validDescription);
         when(studioService.getStudio(eq(1))).thenReturn(studio);
         mockMvc.perform(get("/v1/studio/" + validId))
-                .andExpect(status().isOk())
-                // TODO: FixME
-                .andExpect(jsonPath("$.description", is(studio.getDescription())));
+                .andExpect(jsonPath("$.description", is(validDescription)))
+                .andExpect(jsonPath("$.games").doesNotExist())
+                .andExpect(status().isOk());
     }
 
+    // TODO: FiXMe
     @Test
-    void getStudios() throws Exception {
+    void getStudios_returns200StatusCode() throws Exception {
+        Studio studio = new Studio();
+        studio.setDescription(validDescription);
+        List<Studio> studios = new ArrayList<>(List.of(studio));
+        when(studioService.getStudios()).thenReturn(studios);
         mockMvc.perform(get("/v1/studio/all"))
+                .andExpect(jsonPath("$.description", is(validDescription)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void updateStudio() throws Exception {
+    void updateStudio_withValidDTO_returns200StatusCode() throws Exception {
         mockMvc.perform(put("/v1/studio/" + validId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.marshalJson(
@@ -82,13 +95,13 @@ class StudioControllerTest {
     }
 
     @Test
-    void deleteStudio() throws Exception {
+    void deleteStudio_withValidId_returns204StatusCode() throws Exception {
     mockMvc.perform(delete("/v1/studio/" + validId))
             .andExpect(status().isNoContent());
     }
 
     @Test
-    void deleteStudios() throws Exception {
+    void deleteStudios_returns204StatusCode() throws Exception {
         mockMvc.perform(delete("/v1/studio/all"))
                 .andExpect(status().isNoContent());
     }

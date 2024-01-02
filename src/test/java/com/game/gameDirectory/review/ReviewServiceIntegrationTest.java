@@ -33,8 +33,6 @@ public class ReviewServiceIntegrationTest {
 
     }
 
-    @Disabled
-    // TODO: FIXME
     @Test
     void addReview_WithValidDTO_PatchesRating() {
         // given
@@ -62,7 +60,6 @@ public class ReviewServiceIntegrationTest {
 
 
     // TODO: Someday enable
-    // TODO: Add unit test and integration test that checks if reviews are added to game
     @Disabled
     @Test
     // @Transactional
