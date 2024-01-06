@@ -34,6 +34,8 @@ class StudioControllerTest {
 
     @MockBean
     StudioService studioService;
+
+    // Needed for temporary Exception handler heresy
     @MockBean
     GameRepository gameRepository;
 
@@ -69,18 +71,20 @@ class StudioControllerTest {
         mockMvc.perform(get("/v1/studio/" + validId))
                 .andExpect(jsonPath("$.description", is(validDescription)))
                 .andExpect(jsonPath("$.games").doesNotExist())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn().getResponse();
+
     }
 
     // TODO: FiXMe
     @Test
     void getStudios_returns200StatusCode() throws Exception {
         Studio studio = new Studio();
+        studio.setId(1);
         studio.setDescription(validDescription);
-        List<Studio> studios = new ArrayList<>(List.of(studio));
-        when(studioService.getStudios()).thenReturn(studios);
+        when(studioService.getStudios()).thenReturn(List.of(studio));
         mockMvc.perform(get("/v1/studio/all"))
-                .andExpect(jsonPath("$.description", is(validDescription)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].description", is(validDescription)))
                 .andExpect(status().isOk());
     }
 
