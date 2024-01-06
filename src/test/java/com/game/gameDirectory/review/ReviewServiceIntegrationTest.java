@@ -2,8 +2,8 @@ package com.game.gameDirectory.review;
 
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.game.Game;
+import com.game.gameDirectory.game.GameDTO;
 import com.game.gameDirectory.game.GameService;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,7 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import({ReviewService.class, GameService.class})
@@ -37,7 +33,7 @@ public class ReviewServiceIntegrationTest {
     void addReview_WithValidDTO_PatchesRating() {
         // given
         Game game = new Game();
-        gameService.addGame(game);
+        gameService.addGame(new GameDTO(null, null, null, null, null, 1));
 
         final int rating = 8;
         final String comment = "Delete after creation";
@@ -66,7 +62,7 @@ public class ReviewServiceIntegrationTest {
     void deleteReview_WithValidId_doesNotDeletesGameOfReview(){
         // given
         Game game = new Game();
-        gameService.addGame(game);
+        gameService.addGame(new GameDTO(null, null, null, null, null, 1));
         ReviewDTO reviewDTO = new ReviewDTO(game.getId(), "xd", 3);
         sut.addReview(reviewDTO);
         // always null

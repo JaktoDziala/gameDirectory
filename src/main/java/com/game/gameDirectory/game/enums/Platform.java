@@ -1,4 +1,4 @@
-package com.game.gameDirectory.platform;
+package com.game.gameDirectory.game.enums;
 
 import lombok.Getter;
 

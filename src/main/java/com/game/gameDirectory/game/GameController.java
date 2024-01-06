@@ -25,21 +25,13 @@ class GameController {
     }
 
     @PostMapping("add")
-    ResponseEntity<Game> addGame(@RequestBody Game game) throws Exception{
-        gameService.addGame(game);
-        return new ResponseEntity<>(game, HttpStatus.CREATED);
+    ResponseEntity<Game> addGame(@RequestBody GameDTO gameDTO) throws Exception{
+        return new ResponseEntity<>(gameService.addGame(gameDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("{gameId}")
     ResponseEntity<Game> getGame(@PathVariable Integer gameId){
         return new ResponseEntity<>(gameService.getGame(gameId), HttpStatus.OK);
-    }
-
-    // TODO: Replcae ResponseEntity with @ResponseStatus where possible and write unit test to check limitations
-    @GetMapping("second/{gameId}")
-    @ResponseStatus(HttpStatus.OK)
-    Game getGame2(@PathVariable Integer gameId){
-        return gameService.getGame(gameId);
     }
 
     @GetMapping("all")

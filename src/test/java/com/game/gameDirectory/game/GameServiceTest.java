@@ -1,5 +1,6 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.exceptions.InvalidDTOValueException;
 import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
@@ -33,8 +34,7 @@ class GameServiceTest {
     Game sharedGame;
 
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         sharedGame = new Game();
     }
 
@@ -42,7 +42,7 @@ class GameServiceTest {
     void addGame_WithValidObject_AddsGame() throws Exception {
         // given
         // when
-        sut.addGame(sharedGame);
+        sut.addGame(new GameDTO(null, null, null, null, null, 1));
 
         // then
         verify(gameRepository).save(sharedGame);
@@ -200,7 +200,9 @@ class GameServiceTest {
         // when
         try {
             sut.patchRating(validGameId, invalidRatingLowerEnd);
-        }catch (OutOfBoundsRatingException ignored){};
+        } catch (OutOfBoundsRatingException ignored) {
+        }
+        ;
 
         // then
         assertEquals(0, game.getReviewCount());
@@ -217,5 +219,21 @@ class GameServiceTest {
         // then
         assertThrows(OutOfBoundsRatingException.class, () -> sut.patchRating(validGameId, invalidRatingLowerEnd));
         assertThrows(OutOfBoundsRatingException.class, () -> sut.patchRating(validGameId, invalidRatingHigherEnd));
+    }
+
+    // TODO: Change into parametrized test for all the values
+    @Test
+    void validateDTO_withNullValuesDTO_ThrowsException() {
+
+        GameDTO gameDTO = new GameDTO(
+                null,
+                null,
+                null,
+                null,
+                null,
+                -1
+        );
+        sut.validateDTO(gameDTO);
+        assertThrows(InvalidDTOValueException.class, () -> sut.validateDTO(gameDTO));
     }
 }

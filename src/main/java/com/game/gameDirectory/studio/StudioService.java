@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-class StudioService {
+public class StudioService {
 
     private final StudioRepository studioRepository;
 
@@ -24,7 +24,7 @@ class StudioService {
         return studio;
     }
 
-    Studio getStudio(int id) {
+    public Studio getStudio(int id) {
         return studioRepository.findById(id).
                 orElseThrow(() -> new ObjectNotFoundException("Studio with Id " + id + " was not found"));
     }

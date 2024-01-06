@@ -1,6 +1,7 @@
 package com.game.gameDirectory.game;
 
-import com.game.gameDirectory.platform.Platform;
+import com.game.gameDirectory.game.enums.Genre;
+import com.game.gameDirectory.game.enums.Platform;
 import com.game.gameDirectory.review.Review;
 import com.game.gameDirectory.studio.Studio;
 import jakarta.persistence.CascadeType;
@@ -17,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +36,8 @@ public class Game {
     private Date releaseDate;
     @Enumerated(EnumType.STRING)
     private Platform platform;
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
     private Float rating = 0.f;
     private Integer reviewCount = 0;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
@@ -43,12 +45,13 @@ public class Game {
     @ManyToOne
     private Studio studio;
 
-    public Game(String title, String description, Date releaseDate, Platform platform, Studio studio) {
+    public Game(String title, String description, Date releaseDate, Platform platform, Studio studio, Genre genre) {
         this.title = title;
         this.description = description;
         this.releaseDate = releaseDate;
         this.platform = platform;
         this.studio = studio;
+        this.genre = genre;
     }
 
     public List<Review> getReviews(){

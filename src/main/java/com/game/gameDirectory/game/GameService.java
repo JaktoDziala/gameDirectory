@@ -1,22 +1,35 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.exceptions.InvalidDTOValueException;
 import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
+import com.game.gameDirectory.game.enums.Genre;
+import com.game.gameDirectory.game.enums.Platform;
+import com.game.gameDirectory.studio.Studio;
+import com.game.gameDirectory.studio.StudioService;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class GameService {
     private final GameRepository gameRepository;
+    private final StudioService studioService;
 
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, StudioService studioService) {
+
         this.gameRepository = gameRepository;
+        this.studioService = studioService;
     }
 
-    public void addGame(Game game) {
-        gameRepository.save(game);
+    public Game addGame(GameDTO gameDTO) {
+        return gameRepository.save(
+                validateDTO(gameDTO)
+        );
     }
 
     public Game getGame(int gameId) {
@@ -65,15 +78,55 @@ public class GameService {
         getGame(gameId);
         gameRepository.deleteById(gameId);
     }
+
     public void deleteGame(Game game) {
         if (game != null) {
             deleteGame(game.getId());
-        }else {
+        } else {
             throw new NullObjectException(Game.class);
         }
     }
 
     void deleteAll() {
         gameRepository.deleteAll();
+    }
+
+    // TODO: Rozważ interfejsy
+    // TODO: Fix date to use not deprecated type
+    Game validateDTO(GameDTO gameDTO) {
+
+        Game game = new Game();
+
+        try {
+            game.setPlatform(
+                    Platform.valueOf(gameDTO.platform()));
+        } catch (Exception e) {
+            throw new InvalidDTOValueException("Platform of gameDTO is of invalid type!");
+        }
+
+        try {
+            game.setGenre(
+                    Genre.valueOf(gameDTO.genre())
+            );
+        } catch (Exception e) {
+            throw new InvalidDTOValueException("Genre of gameDTO is of invalid type!");
+        }
+
+        if (StringUtils.isBlank(gameDTO.title())) {
+            throw new InvalidDTOValueException("Title of gameDTO is Blank!");
+        }
+        if (StringUtils.isBlank(gameDTO.description())) {
+            throw new InvalidDTOValueException("Description of gameDTO is Blank!");
+        }
+        if (StringUtils.isBlank(gameDTO.releaseDate())) {
+            throw new InvalidDTOValueException("Release Date of gameDTO is Blank!");
+        }
+
+        game.setTitle(gameDTO.title());
+        game.setDescription(gameDTO.description());
+        game.setReleaseDate(new Date(gameDTO.releaseDate()));
+        game.setStudio(studioService.getStudio(gameDTO.studioId()));
+
+        return game;
     }
 }
