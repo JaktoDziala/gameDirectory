@@ -36,6 +36,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleNullObjectException(NullObjectException e){
     return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
     }
+
+    @ExceptionHandler(InvalidDateFormatException.class)
+    public ResponseEntity<?> handleInvalidDateFormatException(InvalidDateFormatException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
 
 

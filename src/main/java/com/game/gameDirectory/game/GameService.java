@@ -1,6 +1,7 @@
 package com.game.gameDirectory.game;
 
 import com.game.gameDirectory.exceptions.InvalidDTOValueException;
+import com.game.gameDirectory.exceptions.InvalidDateFormatException;
 import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
@@ -12,6 +13,8 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -92,7 +95,7 @@ public class GameService {
     }
 
     // TODO: Rozważ interfejsy
-    // TODO: Fix date to use not deprecated type
+    // TODO: Add unit
     Game validateDTO(GameDTO gameDTO) {
 
         Game game = new Game();
@@ -124,9 +127,20 @@ public class GameService {
 
         game.setTitle(gameDTO.title());
         game.setDescription(gameDTO.description());
-        game.setReleaseDate(new Date(gameDTO.releaseDate()));
+        game.setReleaseDate(parseGameReleaseDate(gameDTO.releaseDate()));
         game.setStudio(studioService.getStudio(gameDTO.studioId()));
 
         return game;
+    }
+
+    Date parseGameReleaseDate(String releaseDate){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+        try{
+            return dateFormat.parse(releaseDate);
+        }catch (ParseException e){
+            throw new InvalidDateFormatException("Invalid date format! " +
+                    "Provide date in expected format: " + dateFormat);
+        }
     }
 }

@@ -1,20 +1,25 @@
 package com.game.gameDirectory.game;
 
 import com.game.gameDirectory.exceptions.InvalidDTOValueException;
+import com.game.gameDirectory.exceptions.InvalidDateFormatException;
 import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -235,5 +240,33 @@ class GameServiceTest {
         );
         sut.validateDTO(gameDTO);
         assertThrows(InvalidDTOValueException.class, () -> sut.validateDTO(gameDTO));
+    }
+
+    @Test
+    void parseGameReleaseDate_withDateInValidFormat_returnsDate() {
+        // given
+        final String validDateFormat = "06-02-2000";
+        final String expectedDate = "Sun Feb 06 00:00:00 GMT 2000";
+        // when
+        Date result = sut.parseGameReleaseDate(validDateFormat);
+
+        // then
+        assertEquals(expectedDate, result.toString());
+    }
+
+    @CsvSource({
+            "2000-06-02",
+            "06-2000-02",
+            "06-00-2000",
+            "06 02 2000",
+            "06022000",
+            "Sun Feb 06 00:00:00 GMT 2000",
+    })
+    @ParameterizedTest
+    void parseGameReleaseDate_withInvalidDate_throwsException(String date) {
+        // given
+        // when
+        // then
+        assertThrows(InvalidDateFormatException.class, () -> sut.parseGameReleaseDate(date));
     }
 }
