@@ -94,8 +94,6 @@ public class GameService {
         gameRepository.deleteAll();
     }
 
-    // TODO: Rozważ interfejsy
-    // TODO: Add unit
     Game validateDTO(GameDTO gameDTO) {
 
         Game game = new Game();

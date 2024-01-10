@@ -5,11 +5,16 @@ import com.game.gameDirectory.exceptions.InvalidDateFormatException;
 import com.game.gameDirectory.exceptions.NullObjectException;
 import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
+import com.game.gameDirectory.game.enums.Genre;
+import com.game.gameDirectory.game.enums.Platform;
+import com.game.gameDirectory.studio.Studio;
+import com.game.gameDirectory.studio.StudioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +39,8 @@ class GameServiceTest {
 
     @Mock
     GameRepository gameRepository;
+    @Mock
+    StudioService studioService;
 
     private final int validGameId = 1;
     private final int invalidGameId = -1;
@@ -44,17 +52,22 @@ class GameServiceTest {
     }
 
     @Test
-    void addGame_WithValidObject_AddsGame() throws Exception {
+    void addGame_withValidObject_doesNotThrowException() {
         // given
         // when
-        sut.addGame(new GameDTO(null, null, null, null, null, 1));
-
         // then
-        verify(gameRepository).save(sharedGame);
+        sut.addGame(
+                new GameDTO("title",
+                        "description",
+                        "06-02-2000",
+                        Platform.PC.toString(),
+                        Genre.ACTION.toString(),
+                        1)
+        );
     }
 
     @Test
-    void getGame_WithValidId_ReturnsGame() {
+    void getGame_withValidId_ReturnsGame() {
         // given
         when(gameRepository.findById(validGameId)).thenReturn(Optional.of(sharedGame));
 
@@ -67,7 +80,7 @@ class GameServiceTest {
     }
 
     @Test
-    void getGame_WithNotValidId_ThrowsException() throws ObjectNotFoundException {
+    void getGame_withNotValidId_ThrowsException() throws ObjectNotFoundException {
         // given
         // when
         // then
@@ -75,7 +88,7 @@ class GameServiceTest {
     }
 
     @Test
-    void getGames_WithValidId_ReturnsListOfGames() {
+    void getGames_withValidId_ReturnsListOfGames() {
         // given
         List<Game> games = new ArrayList<>(List.of(sharedGame));
         when(gameRepository.findAll()).thenReturn(games);
@@ -89,7 +102,7 @@ class GameServiceTest {
     }
 
     @Test
-    void deleteGame_WithValidId_DeletesGame() {
+    void deleteGame_withValidId_DeletesGame() {
         // given
         when(gameRepository.findById(validGameId)).thenReturn(Optional.of(sharedGame));
 
@@ -101,7 +114,7 @@ class GameServiceTest {
     }
 
     @Test
-    void deleteGame_WithNullObject_ThrowsException() throws NullObjectException {
+    void deleteGame_withNullObject_ThrowsException() throws NullObjectException {
         // given
         // when
         // then
@@ -109,7 +122,7 @@ class GameServiceTest {
     }
 
     @Test
-    void deleteGame_WithNotValidId_ThrowsException() throws ObjectNotFoundException {
+    void deleteGame_withNotValidId_ThrowsException() throws ObjectNotFoundException {
         // given
         // when
         // then
@@ -117,7 +130,7 @@ class GameServiceTest {
     }
 
     @Test
-    void deleteAll_DeletesAllGames() {
+    void deleteAll_deletesAllGames() {
         // given
         // when
         sut.deleteAll();
@@ -127,7 +140,7 @@ class GameServiceTest {
     }
 
     @Test
-    void updateGame_WithValidId_UpdatesGame() {
+    void updateGame_withValidId_UpdatesGame() {
         // given
         Game game = new Game();
         game.setTitle("220");
@@ -144,7 +157,7 @@ class GameServiceTest {
     }
 
     @Test
-    void updateGame_WithNotValidId_ThrowsException() {
+    void updateGame_withNotValidId_ThrowsException() {
         // given
         // when
         // then
@@ -152,7 +165,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_WithValidRating_AddsRating() {
+    void patchRating_withValidRating_AddsRating() {
         // given
         int validPartialRating = 10;
         when(gameRepository.findById(validGameId)).thenReturn(Optional.of(new Game()));
@@ -165,7 +178,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_AfterAddingValidRatings_ReturnsMeanOfRatings() {
+    void patchRating_afterAddingValidRatings_ReturnsMeanOfRatings() {
         // given
         int validPartialRatingFirst = 6;
         int validPartialRatingSecond = 7;
@@ -180,7 +193,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_AfterAddingValidRatings_IncreasesReviewCount() {
+    void patchRating_afterAddingValidRatings_IncreasesReviewCount() {
         // given
         int validPartialRatingFirst = 6;
         int validPartialRatingSecond = 7;
@@ -196,7 +209,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_WithInvalidRating_DoesNotIncreaseReviewCount() throws OutOfBoundsRatingException {
+    void patchRating_withNotValidRating_doesNotIncreaseReviewCount() throws OutOfBoundsRatingException {
         // given
         int invalidRatingLowerEnd = 0;
         Game game = new Game();
@@ -214,7 +227,7 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_WithInvalidRating_ThrowsException() {
+    void patchRating_withInvalidRating_throwsException() {
         // given
         int invalidRatingLowerEnd = 0;
         int invalidRatingHigherEnd = 0;
@@ -224,22 +237,6 @@ class GameServiceTest {
         // then
         assertThrows(OutOfBoundsRatingException.class, () -> sut.patchRating(validGameId, invalidRatingLowerEnd));
         assertThrows(OutOfBoundsRatingException.class, () -> sut.patchRating(validGameId, invalidRatingHigherEnd));
-    }
-
-    // TODO: Change into parametrized test for all the values
-    @Test
-    void validateDTO_withNullValuesDTO_ThrowsException() {
-
-        GameDTO gameDTO = new GameDTO(
-                null,
-                null,
-                null,
-                null,
-                null,
-                -1
-        );
-        sut.validateDTO(gameDTO);
-        assertThrows(InvalidDTOValueException.class, () -> sut.validateDTO(gameDTO));
     }
 
     @Test
@@ -252,6 +249,29 @@ class GameServiceTest {
 
         // then
         assertEquals(expectedDate, result.toString());
+    }
+
+    static Stream<GameDTO> gameDTOStream() {
+        String validTitle = "Title";
+        String validDescription = "Description";
+        String validReleaseDate = "06-02-2000";
+        String validPlatform = Platform.PC.toString();
+        String validGenre = Genre.ACTION.toString();
+        int validId = 1;
+
+        return Stream.of(
+                new GameDTO(null, validDescription, validReleaseDate, validPlatform, validGenre, validId),
+                new GameDTO(validTitle, null, validReleaseDate, validPlatform, validGenre, validId),
+                new GameDTO(validTitle, validDescription, null, validPlatform, validGenre, validId),
+                new GameDTO(validTitle, validDescription, validReleaseDate, "EXCEPTION", validGenre, validId),
+                new GameDTO(validTitle, validDescription, validReleaseDate, validPlatform, "EXCEPTION", validId)
+                );
+    }
+
+    @ParameterizedTest
+    @MethodSource("gameDTOStream")
+    void validateDTO_withInvalidValuesDTO_ThrowsException(GameDTO gameDTO) {
+        assertThrows(InvalidDTOValueException.class, () -> sut.validateDTO(gameDTO));
     }
 
     @CsvSource({
