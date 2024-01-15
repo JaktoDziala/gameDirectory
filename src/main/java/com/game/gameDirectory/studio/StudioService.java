@@ -14,7 +14,7 @@ public class StudioService {
         this.studioRepository = studioRepository;
     }
 
-    Studio addStudio(StudioDTO studioDTO) {
+    public Studio addStudio(StudioDTO studioDTO) {
         Studio studio = new Studio(
                 studioDTO.description(),
                 studioDTO.games()

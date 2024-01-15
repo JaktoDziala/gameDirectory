@@ -4,6 +4,11 @@ import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.game.Game;
 import com.game.gameDirectory.game.GameDTO;
 import com.game.gameDirectory.game.GameService;
+import com.game.gameDirectory.game.enums.Genre;
+import com.game.gameDirectory.game.enums.Platform;
+import com.game.gameDirectory.studio.Studio;
+import com.game.gameDirectory.studio.StudioRepository;
+import com.game.gameDirectory.studio.StudioService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -16,13 +21,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({ReviewService.class, GameService.class})
+@Import({ReviewService.class, GameService.class, StudioService.class})
 public class ReviewServiceIntegrationTest {
 
     @Autowired
     ReviewService sut;
     @Autowired
     GameService gameService;
+    @Autowired
+    StudioService studioService;
+    @Autowired
+    private StudioRepository studioRepository;
 
     @AfterEach
     void setAfter(){
@@ -32,8 +41,14 @@ public class ReviewServiceIntegrationTest {
     @Test
     void addReview_WithValidDTO_PatchesRating() {
         // given
-        Game game = new Game();
-        gameService.addGame(new GameDTO(null, null, null, null, null, 1));
+        // TODO: Add assigning game to studio
+        // TODO: INTEGRATION TEST. If game is assigned to studio, is studio game count increased
+        Game game = gameService.addGame(new GameDTO("title",
+                "description",
+                "06-02-2000",
+                Platform.PC.toString(),
+                Genre.ACTION.toString(),
+                null));
 
         final int rating = 8;
         final String comment = "Delete after creation";

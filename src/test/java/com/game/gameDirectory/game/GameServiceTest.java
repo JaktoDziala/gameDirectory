@@ -243,7 +243,7 @@ class GameServiceTest {
     void parseGameReleaseDate_withDateInValidFormat_returnsDate() {
         // given
         final String validDateFormat = "06-02-2000";
-        final String expectedDate = "Sun Feb 06 00:00:00 GMT 2000";
+        final String expectedDate = "Sun Feb 06 00:00:00 CET 2000";
         // when
         Date result = sut.parseGameReleaseDate(validDateFormat);
 

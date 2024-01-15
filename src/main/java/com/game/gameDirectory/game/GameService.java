@@ -1,20 +1,17 @@
 package com.game.gameDirectory.game;
 
-import com.game.gameDirectory.exceptions.InvalidDTOValueException;
-import com.game.gameDirectory.exceptions.InvalidDateFormatException;
-import com.game.gameDirectory.exceptions.NullObjectException;
-import com.game.gameDirectory.exceptions.ObjectNotFoundException;
-import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
+import com.game.gameDirectory.exceptions.*;
 import com.game.gameDirectory.game.enums.Genre;
 import com.game.gameDirectory.game.enums.Platform;
 import com.game.gameDirectory.studio.Studio;
 import com.game.gameDirectory.studio.StudioService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +21,6 @@ public class GameService {
     private final StudioService studioService;
 
     public GameService(GameRepository gameRepository, StudioService studioService) {
-
         this.gameRepository = gameRepository;
         this.studioService = studioService;
     }
@@ -94,6 +90,52 @@ public class GameService {
         gameRepository.deleteAll();
     }
 
+    // TODO: Add unit. Check if you need to save it back to repo
+
+    /**
+    * Using/JPA Hibernate with Transactions:
+     * If your GameService and StudioService are part of a transactional Spring Boot application (which is the usual case),
+     * and the entities Game and Studio are managed by the persistence context,
+     * then any changes made to these entities within a transaction are automatically persisted when the transaction completes.
+     * In this scenario,
+     * if the assignToStudio method is transactional (annotated with @Transactional),
+     * and the entities Game and Studio are already managed by the persistence context
+     * (typically because they were fetched from the database within the same transaction),
+     * then you don't need to explicitly save them.
+     * The changes will be automatically flushed to the database at the end of the transaction.
+    **/
+    @Transactional
+    // TODO: Correct this method, test persistance in transactional context
+    void assignToStudio(int gameId, int studioId) {
+        Game game = getGame(gameId);
+        Studio studio = studioService.getStudio(studioId);
+
+        List<Game> games = studio.getGames();
+
+        if (!games.contains(game)){
+            List<Game> games1 = new ArrayList<>(games);
+            games1.add(game);
+            studio.setGames(games1);
+        }
+
+        game.setStudio(studio);
+    }
+
+
+    // TODO: Make game studio getter safe. It should return just a copy
+    void assignToStudioNoTransaction(int gameId, int studioId) {
+        Game game = getGame(gameId);
+        Studio studio = studioService.getStudio(studioId);
+
+        List<Game> games = studio.getGames();
+
+        if (!games.contains(game)){
+            studio.getGames().add(game);
+        }
+
+        game.setStudio(studio);
+    }
+
     Game validateDTO(GameDTO gameDTO) {
 
         Game game = new Game();
@@ -126,7 +168,10 @@ public class GameService {
         game.setTitle(gameDTO.title());
         game.setDescription(gameDTO.description());
         game.setReleaseDate(parseGameReleaseDate(gameDTO.releaseDate()));
-        game.setStudio(studioService.getStudio(gameDTO.studioId()));
+
+        if (gameDTO.studioId() != null){
+            game.setStudio(studioService.getStudio(gameDTO.studioId()));
+        }
 
         return game;
     }

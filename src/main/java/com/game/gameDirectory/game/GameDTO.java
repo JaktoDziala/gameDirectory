@@ -6,6 +6,6 @@ public record GameDTO(
         String releaseDate,
         String platform,
         String genre,
-        int studioId
+        Integer studioId
 ) {
 }
