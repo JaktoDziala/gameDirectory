@@ -41,6 +41,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleInvalidDateFormatException(InvalidDateFormatException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidDTOValueException.class)
+    public ResponseEntity<?> handleInvalidDTOValueException(InvalidDTOValueException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
 
 

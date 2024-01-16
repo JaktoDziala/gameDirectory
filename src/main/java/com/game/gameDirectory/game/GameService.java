@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -90,50 +92,38 @@ public class GameService {
         gameRepository.deleteAll();
     }
 
-    // TODO: Add unit. Check if you need to save it back to repo
-
-    /**
-    * Using/JPA Hibernate with Transactions:
-     * If your GameService and StudioService are part of a transactional Spring Boot application (which is the usual case),
-     * and the entities Game and Studio are managed by the persistence context,
-     * then any changes made to these entities within a transaction are automatically persisted when the transaction completes.
-     * In this scenario,
-     * if the assignToStudio method is transactional (annotated with @Transactional),
-     * and the entities Game and Studio are already managed by the persistence context
-     * (typically because they were fetched from the database within the same transaction),
-     * then you don't need to explicitly save them.
-     * The changes will be automatically flushed to the database at the end of the transaction.
-    **/
     @Transactional
-    // TODO: Correct this method, test persistance in transactional context
-    void assignToStudio(int gameId, int studioId) {
+    String assignToStudio(int gameId, int studioId) {
         Game game = getGame(gameId);
         Studio studio = studioService.getStudio(studioId);
 
         List<Game> games = studio.getGames();
 
         if (!games.contains(game)){
-            List<Game> games1 = new ArrayList<>(games);
-            games1.add(game);
-            studio.setGames(games1);
+            List<Game> gamesToPersist = new ArrayList<>(games);
+            gamesToPersist.add(game);
+            studio.setGames(gamesToPersist);
         }
 
         game.setStudio(studio);
+        // TODO: Add name to studio
+        return "Game studio set for " + studio;
     }
 
-
-    // TODO: Make game studio getter safe. It should return just a copy
-    void assignToStudioNoTransaction(int gameId, int studioId) {
+    String assignToStudioNoTransaction(int gameId, int studioId) {
         Game game = getGame(gameId);
         Studio studio = studioService.getStudio(studioId);
 
         List<Game> games = studio.getGames();
 
         if (!games.contains(game)){
-            studio.getGames().add(game);
+            List<Game> gamesToPersist = new ArrayList<>(games.size()+1);
+            gamesToPersist.add(game);
+            studio.setGames(gamesToPersist);
         }
 
         game.setStudio(studio);
+        return "Game studio set for " + studio;
     }
 
     Game validateDTO(GameDTO gameDTO) {
@@ -144,7 +134,11 @@ public class GameService {
             game.setPlatform(
                     Platform.valueOf(gameDTO.platform()));
         } catch (Exception e) {
-            throw new InvalidDTOValueException("Platform of gameDTO is of invalid type!");
+            // TODO: Focus more on learning streams
+            throw new InvalidDTOValueException("Platform of gameDTO is of invalid type! Use one of the following types: "
+                    + Arrays.stream(Platform.values())
+                    .map(Enum::name)
+                    .collect(Collectors.joining(", ")));
         }
 
         try {
@@ -152,7 +146,10 @@ public class GameService {
                     Genre.valueOf(gameDTO.genre())
             );
         } catch (Exception e) {
-            throw new InvalidDTOValueException("Genre of gameDTO is of invalid type!");
+            throw new InvalidDTOValueException("Genre of gameDTO is of invalid type! Use one of the following types: "
+                    + Arrays.stream(Genre.values()).map(
+                    Genre::name)
+                    .collect(Collectors.joining(", ")));
         }
 
         if (StringUtils.isBlank(gameDTO.title())) {

@@ -11,12 +11,13 @@ import java.util.List;
 class GameController {
     private final GameService gameService;
 
+    // TODO: Check by postman how requests responses look real life, good and bad cases
     public GameController(GameService gameService) {
         this.gameService = gameService;
     }
 
     @PostMapping("add")
-    ResponseEntity<Game> addGame(@RequestBody GameDTO gameDTO) throws Exception{
+    ResponseEntity<Game> addGame(@RequestBody GameDTO gameDTO){
         return new ResponseEntity<>(gameService.addGame(gameDTO), HttpStatus.CREATED);
     }
 
@@ -51,5 +52,16 @@ class GameController {
     @PatchMapping("rating/{gameId}")
     ResponseEntity<Float> patchGameRating(@PathVariable int gameId, @RequestParam int rating){
         return new ResponseEntity<>(gameService.patchRating(gameId, rating), HttpStatus.OK);
+    }
+
+    // TODO: Postman Check
+    @PatchMapping("assign/studio/transactional")
+    ResponseEntity<String> patchGameStudioTransactional(@RequestParam int gameId, @RequestParam int studioId){
+        return new ResponseEntity<>(gameService.assignToStudio(gameId, studioId), HttpStatus.OK);
+    }
+
+    @PatchMapping("assign/studio")
+    ResponseEntity<String> patchGameStudioNonTransactional(@RequestParam int gameId, @RequestParam int studioId){
+        return new ResponseEntity<>(gameService.assignToStudio(gameId, studioId), HttpStatus.OK);
     }
 }
