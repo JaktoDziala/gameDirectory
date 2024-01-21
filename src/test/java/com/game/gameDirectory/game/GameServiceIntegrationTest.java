@@ -20,11 +20,15 @@ public class GameServiceIntegrationTest {
     GameService sut;
     @Autowired
     StudioService studioService;
+    // TODO: 1. check static vs non static
+    final String validName = "studio z";
+    final String validDescription = "description z";
 
     @Test
     void assignToStudio_withValidIdsAndTransactionalAnnotation_persistsData() {
         // given
         Studio studio = studioService.addStudio(new StudioDTO(
+                validName,
                 "Transactional studio",
                 List.of()
         ));
@@ -44,6 +48,7 @@ public class GameServiceIntegrationTest {
     void assignToStudio_withValidIdsAndNotTransactionalAnnotation_doesNotPersistsData() {
         // given
         Studio studio = studioService.addStudio(new StudioDTO(
+                validName,
                 "Non-transactional studio",
                 List.of()
         ));

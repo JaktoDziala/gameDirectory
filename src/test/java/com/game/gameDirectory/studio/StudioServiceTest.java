@@ -25,12 +25,14 @@ class StudioServiceTest {
 
     private final int validId = 1;
     private final int invalidId = -1;
+    // TODO: check private vs public in unit
+    private final String validName = "valid name";
     private final String validDescription = "2137";
 
     @Test
     void addStudio_withValidObject_addsStudio() {
         // given
-        StudioDTO studioDTO = new StudioDTO(validDescription, null);
+        StudioDTO studioDTO = new StudioDTO(validName, validDescription, null);
 
         // when
         Studio result =  sut.addStudio(studioDTO);
@@ -85,8 +87,9 @@ class StudioServiceTest {
     @Test
     void updateStudio_withValidDescriptionOnly_updatesOnlyDescription() {
         // given
-        Studio studio = new Studio(validDescription, new ArrayList<>());
+        Studio studio = new Studio(validName, validDescription, new ArrayList<>());
         StudioDTO studioDTO = new StudioDTO(
+                validName,
                 "xxx",
                 null
         );
@@ -104,8 +107,9 @@ class StudioServiceTest {
     @Test
     void updateStudio_withValidGamesOnly_updatesOnlyGamesList() {
         // given
-        Studio studio = new Studio(validDescription, new ArrayList<>());
+        Studio studio = new Studio(validName, validDescription, new ArrayList<>());
         StudioDTO studioDTO = new StudioDTO(
+                validName,
                 null,
                 new ArrayList<>()
         );
@@ -125,6 +129,7 @@ class StudioServiceTest {
     void updateStudio_withNotValidId_throwsException() {
         // given
         StudioDTO studioDTO = new StudioDTO(
+                validName,
                 null,
                 new ArrayList<>()
         );

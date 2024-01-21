@@ -21,13 +21,16 @@ public class Studio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String name;
+
     private String description;
 
     @JsonIgnore
     @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Game> games;
 
-    public Studio(String description, List<Game> games) {
+    public Studio(String name, String description, List<Game> games) {
+        this.name = name;
         this.description = description;
         this.games = games;
     }

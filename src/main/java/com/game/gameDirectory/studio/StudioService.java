@@ -16,6 +16,7 @@ public class StudioService {
 
     public Studio addStudio(StudioDTO studioDTO) {
         Studio studio = new Studio(
+                studioDTO.name(),
                 studioDTO.description(),
                 studioDTO.games()
         );
@@ -35,6 +36,8 @@ public class StudioService {
 
     void updateStudio(int id, StudioDTO studio) {
         Studio oldStudio = getStudio(id);
+        if (studio.name() != null)
+            oldStudio.setName(studio.name());
         if (studio.description() != null)
             oldStudio.setDescription(studio.description());
         if (studio.games() != null)

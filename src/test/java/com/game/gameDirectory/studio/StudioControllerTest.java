@@ -33,6 +33,7 @@ class StudioControllerTest {
     @MockBean
     GameRepository gameRepository;
 
+    final String validName = "xd";
     final String validDescription = "ok";
     final int validId = 1;
 
@@ -40,12 +41,12 @@ class StudioControllerTest {
 
     @BeforeEach
     void setUp(){
-        studioDTO = new StudioDTO(validDescription, List.of());
+        studioDTO = new StudioDTO(validName, validDescription, List.of());
     }
 
     @Test
     void addStudio_withValidDTO_returns201StatusCode() throws Exception {
-        Studio studio = new Studio(validDescription, List.of());
+        Studio studio = new Studio(validName, validDescription, List.of());
         when(studioService.addStudio(studioDTO)).thenReturn(studio);
         mockMvc.perform(post("/v1/studio/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +88,7 @@ class StudioControllerTest {
         mockMvc.perform(put("/v1/studio/" + validId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.marshalJson(
-                        new StudioDTO(validDescription, List.of())
+                        new StudioDTO(validName, validDescription, List.of())
                 )))
                 .andExpect(status().isOk());
     }
