@@ -11,7 +11,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GameController.class)
@@ -19,16 +23,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GameControllerTest {
 
     @InjectMocks
-    GameController sut;
+    private GameController sut;
     @MockBean
-    GameService gameService;
+    private GameService gameService;
     @MockBean
-    GameRepository gameRepository;
-
+    private GameRepository gameRepository;
     @Autowired
     private MockMvc mockMvc;
 
-    private final int validId = 1;
+    private static final int validId = 1;
 
     @Test
     void addGame_withValidObject_returnsStatusCode201() throws Exception {

@@ -11,22 +11,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewControllerTest {
 
-    private MockMvc mockMvc;
-
     @InjectMocks
     private ReviewController sut;
     @Mock
     private ReviewService reviewService;
-
-    final int validId = 1;
-    final String validComment = "2/10";
-    final int validRating = 2;
+    private MockMvc mockMvc;
+    private final static int validId = 1;
+    private final static String validComment = "2/10";
+    private final static int validRating = 2;
 
     @BeforeEach
     void setup(){

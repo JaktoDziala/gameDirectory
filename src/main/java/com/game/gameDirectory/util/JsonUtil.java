@@ -3,7 +3,6 @@ package com.game.gameDirectory.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-// TODO learn about static keyword in-depth
 public class JsonUtil {
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

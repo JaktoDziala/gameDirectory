@@ -12,8 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StudioServiceTest {
@@ -22,12 +27,10 @@ class StudioServiceTest {
     private StudioService sut;
     @Mock
     private StudioRepository studioRepository;
-
-    private final int validId = 1;
-    private final int invalidId = -1;
-    // TODO: check private vs public in unit
-    private final String validName = "valid name";
-    private final String validDescription = "2137";
+    private static final int validId = 1;
+    private static final int invalidId = -1;
+    private static final String validName = "valid name";
+    private static final String validDescription = "2137";
 
     @Test
     void addStudio_withValidObject_addsStudio() {

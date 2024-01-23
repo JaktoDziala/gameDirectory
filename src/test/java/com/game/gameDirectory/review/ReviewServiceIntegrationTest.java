@@ -6,7 +6,6 @@ import com.game.gameDirectory.game.GameDTO;
 import com.game.gameDirectory.game.GameService;
 import com.game.gameDirectory.game.enums.Genre;
 import com.game.gameDirectory.game.enums.Platform;
-import com.game.gameDirectory.studio.Studio;
 import com.game.gameDirectory.studio.StudioRepository;
 import com.game.gameDirectory.studio.StudioService;
 import org.junit.jupiter.api.AfterEach;
@@ -18,18 +17,22 @@ import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @Import({ReviewService.class, GameService.class, StudioService.class})
 public class ReviewServiceIntegrationTest {
 
     @Autowired
-    ReviewService sut;
+    private ReviewService sut;
     @Autowired
-    GameService gameService;
+    private GameService gameService;
     @Autowired
-    StudioService studioService;
+    private StudioService studioService;
     @Autowired
     private StudioRepository studioRepository;
 

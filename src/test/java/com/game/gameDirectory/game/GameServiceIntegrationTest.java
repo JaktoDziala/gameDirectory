@@ -17,12 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GameServiceIntegrationTest {
 
     @Autowired
-    GameService sut;
+    private GameService sut;
     @Autowired
-    StudioService studioService;
-    // TODO: 1. check static vs non static
-    final String validName = "studio z";
-    final String validDescription = "description z";
+    private StudioService studioService;
+    private static final String validName = "studio z";
+    private static final String validDescription = "description z";
 
     @Test
     void assignToStudio_withValidIdsAndTransactionalAnnotation_persistsData() {
@@ -58,7 +57,7 @@ public class GameServiceIntegrationTest {
 
         // when
         sut.assignToStudioNoTransaction(1, 1);
-    // TODO: Figure out why it's working
+        // TODO: Figure out why it's working
         // then
         assertEquals(sut.getGame(1).getStudio(), studio);
         assertEquals(studioService.getStudio(1).getGames().getFirst(), game);

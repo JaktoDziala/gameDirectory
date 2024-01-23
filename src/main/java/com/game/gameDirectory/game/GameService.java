@@ -134,7 +134,6 @@ public class GameService {
             game.setPlatform(
                     Platform.valueOf(gameDTO.platform()));
         } catch (Exception e) {
-            // TODO: Focus more on learning streams
             throw new InvalidDTOValueException("Platform of gameDTO is of invalid type! Use one of the following types: "
                     + Arrays.stream(Platform.values())
                     .map(Enum::name)

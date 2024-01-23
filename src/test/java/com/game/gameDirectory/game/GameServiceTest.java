@@ -7,7 +7,6 @@ import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
 import com.game.gameDirectory.game.enums.Genre;
 import com.game.gameDirectory.game.enums.Platform;
-import com.game.gameDirectory.studio.Studio;
 import com.game.gameDirectory.studio.StudioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -35,16 +33,14 @@ import static org.mockito.Mockito.when;
 class GameServiceTest {
 
     @InjectMocks
-    GameService sut;
-
+    private GameService sut;
     @Mock
-    GameRepository gameRepository;
+    private GameRepository gameRepository;
     @Mock
-    StudioService studioService;
-
-    private final int validGameId = 1;
-    private final int invalidGameId = -1;
-    Game sharedGame;
+    private StudioService studioService;
+    private static final int validGameId = 1;
+    private static final int invalidGameId = -1;
+    private Game sharedGame;
 
     @BeforeEach
     void setUp() {

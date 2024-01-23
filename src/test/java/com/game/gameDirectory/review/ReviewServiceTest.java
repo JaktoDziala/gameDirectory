@@ -25,10 +25,10 @@ class ReviewServiceTest {
     private ReviewRepository reviewRepository;
     @Mock
     private GameService gameService;
-    private final int validId = 1;
-    private final int invalidId = -1;
-    private final int validRating = 2;
-    private final String validComment = "2/10";
+    private static final int validId = 1;
+    private static final int invalidId = -1;
+    private static final int validRating = 2;
+    private static final String validComment = "2/10";
 
     @Test
     void addReview_WithValidDTO_AddsReviewWithUpdatedRating() {
