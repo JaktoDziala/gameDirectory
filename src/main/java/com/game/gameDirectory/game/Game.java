@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,7 +25,7 @@ public class Game {
     private Integer id;
     private String title;
     private String description;
-    private Date releaseDate;
+    private LocalDate releaseDate;
     @Enumerated(EnumType.STRING)
     private Platform platform;
     @Enumerated(EnumType.STRING)
@@ -37,7 +37,7 @@ public class Game {
     @ManyToOne
     private Studio studio;
 
-    public Game(String title, String description, Date releaseDate, Platform platform, Studio studio, Genre genre) {
+    public Game(String title, String description, LocalDate releaseDate, Platform platform, Studio studio, Genre genre) {
         this.title = title;
         this.description = description;
         this.releaseDate = releaseDate;
@@ -46,6 +46,7 @@ public class Game {
         this.genre = genre;
     }
 
+    // TODO: check solution against integration test that is failing
     public List<Review> getReviews(){
         return Collections.unmodifiableList(reviews);
     }

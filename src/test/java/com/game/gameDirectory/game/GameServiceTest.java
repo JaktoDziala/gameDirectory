@@ -18,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +57,7 @@ class GameServiceTest {
         sut.addGame(
                 new GameDTO("title",
                         "description",
-                        "06-02-2000",
+                        "2000-02-06",
                         Platform.PC.toString(),
                         Genre.ACTION.toString(),
                         1)
@@ -238,13 +240,13 @@ class GameServiceTest {
     @Test
     void parseGameReleaseDate_withDateInValidFormat_returnsDate() {
         // given
-        final String validDateFormat = "06-02-2000";
-        final String expectedDate = "Sun Feb 06 00:00:00 CET 2000";
+        final String validDateFormat = "2000-02-06";
+
         // when
-        Date result = sut.parseGameReleaseDate(validDateFormat);
+        LocalDate result = sut.parseGameReleaseDate(validDateFormat);
 
         // then
-        assertEquals(expectedDate, result.toString());
+        assertEquals(validDateFormat, result.toString());
     }
 
     static Stream<GameDTO> gameDTOStream() {
@@ -271,12 +273,12 @@ class GameServiceTest {
     }
 
     @CsvSource({
-            "2000-06-02",
+            "06-02-2000",
             "06-2000-02",
-            "06-00-2000",
-            "06 02 2000",
-            "06022000",
-            "Sun Feb 06 00:00:00 GMT 2000",
+            "2000 02 06",
+            "20000206",
+            "2000-2-6",
+            "2000-13-06",
     })
     @ParameterizedTest
     void parseGameReleaseDate_withInvalidDate_throwsException(String date) {

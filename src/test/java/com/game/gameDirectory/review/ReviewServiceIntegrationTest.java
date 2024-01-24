@@ -48,7 +48,7 @@ public class ReviewServiceIntegrationTest {
         // TODO: INTEGRATION TEST. If game is assigned to studio, is studio game count increased
         Game game = gameService.addGame(new GameDTO("title",
                 "description",
-                "06-02-2000",
+                "2000-02-06",
                 Platform.PC.toString(),
                 Genre.ACTION.toString(),
                 null));

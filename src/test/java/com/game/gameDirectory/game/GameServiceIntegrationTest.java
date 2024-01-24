@@ -32,7 +32,7 @@ public class GameServiceIntegrationTest {
                 List.of()
         ));
         Game game = sut.addGame(new GameDTO(
-                "Transactional name", "x", "5-2-2000", "PC", "ACTION", null)
+                "Transactional name", "x", "2000-02-06", "PC", "ACTION", null)
         );
 
         // when
@@ -52,7 +52,7 @@ public class GameServiceIntegrationTest {
                 List.of()
         ));
         Game game = sut.addGame(new GameDTO(
-                "Non-transactional name", "x", "5-2-2000", "PC", "ACTION", null)
+                "Non-transactional name", "x", "2000-02-06", "PC", "ACTION", null)
         );
 
         // when

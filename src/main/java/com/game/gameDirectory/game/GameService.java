@@ -6,15 +6,20 @@ import com.game.gameDirectory.game.enums.Platform;
 import com.game.gameDirectory.studio.Studio;
 import com.game.gameDirectory.studio.StudioService;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,7 +111,6 @@ public class GameService {
         }
 
         game.setStudio(studio);
-        // TODO: Add name to studio
         return "Game studio set for " + studio;
     }
 
@@ -172,14 +176,13 @@ public class GameService {
         return game;
     }
 
-    Date parseGameReleaseDate(String releaseDate){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setLenient(false);
+    LocalDate parseGameReleaseDate(String releaseDate){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
         try{
-            return dateFormat.parse(releaseDate);
-        }catch (ParseException e){
+            return LocalDate.parse(releaseDate, dateTimeFormatter);
+        }catch (DateTimeException e){
             throw new InvalidDateFormatException("Invalid date format! " +
-                    "Provide date in expected format: " + dateFormat);
+                    "Provide date in expected format: yyyy-MM-dd");
         }
     }
 }
