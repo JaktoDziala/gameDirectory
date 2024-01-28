@@ -72,7 +72,6 @@ class StudioControllerTest {
 
     }
 
-    // TODO: FiXMe
     @Test
     void getStudios_returns200StatusCode() throws Exception {
         Studio studio = new Studio();

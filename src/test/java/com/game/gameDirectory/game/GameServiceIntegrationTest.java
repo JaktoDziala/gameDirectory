@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,8 +57,20 @@ public class GameServiceIntegrationTest {
                 "Non-transactional name", "x", "2000-02-06", "PC", "ACTION", null)
         );
 
+
+        List<Game> games = sut.getGames();
+
         // when
-        sut.assignToStudioNoTransaction(1, 1);
+//
+//        The behavior you're observing, where the second test creates a game object with ID 2 instead of ID 1,
+//        is indicative of a common issue with auto-incremented primary keys in in-memory or embedded
+//        databases used in tests.
+//
+//        In many database systems, sequences or auto-increment counters for generating
+//        primary keys are not reset between transactions, even when the transactions are rolled back.
+//        This means that while the data is rolled back, the sequence counter is not,
+//        leading to the next object being inserted with an incremented ID.
+        sut.assignToStudioNoTransaction(2, 2);
         // TODO: Figure out why it's working
         // then
         assertEquals(sut.getGame(1).getStudio(), studio);
