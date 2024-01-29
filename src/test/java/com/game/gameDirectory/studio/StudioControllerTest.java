@@ -31,10 +31,6 @@ class StudioControllerTest {
     @MockBean
     StudioService studioService;
 
-    // Needed for temporary Exception handler heresy
-    @MockBean
-    GameRepository gameRepository;
-
     final String validName = "xd";
     final String validDescription = "ok";
     final int validId = 1;

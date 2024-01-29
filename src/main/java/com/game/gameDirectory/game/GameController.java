@@ -1,5 +1,6 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.annotation.ExampleOnly;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,14 +55,20 @@ class GameController {
         return new ResponseEntity<>(gameService.patchRating(gameId, rating), HttpStatus.OK);
     }
 
-    // TODO: Postman Check
-    @PatchMapping("assign/studio/transactional")
+    // TODO: Reiterate Put vs Patch mapping. Unit/Int test actual difference
+    @PatchMapping("assign/studio")
     ResponseEntity<String> patchGameStudioTransactional(@RequestParam int gameId, @RequestParam int studioId){
         return new ResponseEntity<>(gameService.assignToStudio(gameId, studioId), HttpStatus.OK);
     }
 
-    @PatchMapping("assign/studio")
+    /**
+     * Used only for presentation purposes of non-transactional behaviour.
+     * For more information, see {@link GameService#assignToStudioNoTransaction(int, int)} method.
+     */
+    @ExampleOnly
+    @Deprecated
+    @PatchMapping("assign/studio/non-transactional")
     ResponseEntity<String> patchGameStudioNonTransactional(@RequestParam int gameId, @RequestParam int studioId){
-        return new ResponseEntity<>(gameService.assignToStudio(gameId, studioId), HttpStatus.OK);
+        return new ResponseEntity<>(gameService.assignToStudioNoTransaction(gameId, studioId), HttpStatus.OK);
     }
 }

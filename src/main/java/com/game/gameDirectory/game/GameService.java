@@ -1,25 +1,21 @@
 package com.game.gameDirectory.game;
 
+import com.game.gameDirectory.annotation.ExampleOnly;
 import com.game.gameDirectory.exceptions.*;
 import com.game.gameDirectory.game.enums.Genre;
 import com.game.gameDirectory.game.enums.Platform;
 import com.game.gameDirectory.studio.Studio;
 import com.game.gameDirectory.studio.StudioService;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,15 +101,28 @@ public class GameService {
         List<Game> games = studio.getGames();
 
         if (!games.contains(game)){
-            List<Game> gamesToPersist = new ArrayList<>(games);
+            List<Game> gamesToPersist = new ArrayList<>(games.size()+1);
             gamesToPersist.add(game);
             studio.setGames(gamesToPersist);
         }
 
         game.setStudio(studio);
-        return "Game studio set for " + studio;
+        return "Game: \"" + game.getTitle() + "\" studio set to " +
+                "Studio: \"" + studio.getName() + "\"";
     }
 
+    /**
+     * This method does not automatically persist data as it is not transactional.
+     *
+     * <p>Despite this, integration test result for this method suggest transactional behavior.
+     * This discrepancy arises because of <b>@DataJpaTest</b> annotation,
+     * which treats entire test class as transactional by default.
+     * It leads to results that mimic transactional behavior for non-transactional methods.
+     *
+     * <p>To enable automatic data flushing in real behaviour, use the methods with <b>@Transactional</b> annotation.
+     * Remember that all methods within a class annotated with <b>@DataJpaTest</b> are treated as if they are transactional.
+     */
+    @ExampleOnly()
     String assignToStudioNoTransaction(int gameId, int studioId) {
         Game game = getGame(gameId);
         Studio studio = studioService.getStudio(studioId);
@@ -121,17 +130,17 @@ public class GameService {
         List<Game> games = studio.getGames();
 
         if (!games.contains(game)){
-            List<Game> gamesToPersist = new ArrayList<>(games.size()+1);
-            gamesToPersist.add(game);
-            studio.setGames(gamesToPersist);
+            List<Game> gamesToNotPersist = new ArrayList<>(games.size()+1);
+            gamesToNotPersist.add(game);
+            studio.setGames(gamesToNotPersist);
         }
 
         game.setStudio(studio);
-        return "Game studio set for " + studio;
+        return "Game: \"" + game.getTitle() + "\" studio set to " +
+                "Studio: \"" + studio.getName() + "\"";
     }
 
     Game validateDTO(GameDTO gameDTO) {
-
         Game game = new Game();
 
         try {
