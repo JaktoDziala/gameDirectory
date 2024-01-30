@@ -72,11 +72,8 @@ public class ReviewServiceIntegrationTest {
         assertEquals(1, game.getId());
     }
 
-
-    // TODO: Someday enable
     @Disabled
     @Test
-    // @Transactional
     void deleteReview_WithValidId_doesNotDeletesGameOfReview(){
         // given
         Game game = new Game();

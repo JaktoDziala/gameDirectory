@@ -14,6 +14,7 @@ public class StudioService {
         this.studioRepository = studioRepository;
     }
 
+    // TODO: Refactor, validate DTO like in gameDTO
     public Studio addStudio(StudioDTO studioDTO) {
         Studio studio = new Studio(
                 studioDTO.name(),

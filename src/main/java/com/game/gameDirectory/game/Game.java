@@ -46,7 +46,7 @@ public class Game {
         this.genre = genre;
     }
 
-    // TODO: check solution against integration test that is failing
+    // TODO: List vs Set for saving to DB
     public List<Review> getReviews(){
         return Collections.unmodifiableList(reviews);
     }

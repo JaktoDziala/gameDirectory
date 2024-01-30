@@ -6,13 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+// TODO: Add each endpoint to postman shared collection
 @RestController
 @RequestMapping("v1/game/")
 class GameController {
     private final GameService gameService;
 
-    // TODO: Check by postman how requests responses look real life, good and bad cases
     public GameController(GameService gameService) {
         this.gameService = gameService;
     }
@@ -44,6 +43,7 @@ class GameController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // TODO: Refactor
     @PutMapping("{gameId}")
     ResponseEntity<Game> updateGame(@PathVariable Integer gameId, @RequestBody Game game){
         gameService.updateGame(gameId, game);
