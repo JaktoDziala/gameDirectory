@@ -1,6 +1,5 @@
 package com.game.gameDirectory.game;
 
-import com.game.gameDirectory.annotation.ExampleOnly;
 import com.game.gameDirectory.exceptions.InvalidDTOValueException;
 import com.game.gameDirectory.exceptions.InvalidDateFormatException;
 import com.game.gameDirectory.exceptions.NullObjectException;
@@ -8,7 +7,6 @@ import com.game.gameDirectory.exceptions.ObjectNotFoundException;
 import com.game.gameDirectory.exceptions.OutOfBoundsRatingException;
 import com.game.gameDirectory.game.enums.Genre;
 import com.game.gameDirectory.game.enums.Platform;
-import com.game.gameDirectory.review.Review;
 import com.game.gameDirectory.studio.StudioService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -138,20 +136,21 @@ class GameServiceTest {
     }
 
     @Test
-    void updateGame_withValidId_UpdatesGame() {
+    void updateGame_withValidId_updatesGame() {
         // given
-        Game game = new Game();
-        game.setTitle("220");
-        Game oldGame = new Game();
-        oldGame.setTitle("360");
-        when(gameRepository.findById(validGameId)).thenReturn(Optional.of(oldGame));
+        Game beforeUpdateGame = new Game();
+        beforeUpdateGame.setTitle("360");
+
+        GameDTO gameDTO = new GameDTO("220", null, null, null, null, null);
+
+        when(gameRepository.findById(validGameId)).thenReturn(Optional.of(beforeUpdateGame));
 
         // when
-        sut.updateGame(validGameId, game);
+        sut.updateGame(validGameId, gameDTO);
 
         // then
-        verify(gameRepository).save(oldGame);
-        assertEquals(game.getTitle(), oldGame.getTitle());
+        verify(gameRepository).save(beforeUpdateGame);
+        assertEquals(gameDTO.title(), beforeUpdateGame.getTitle());
     }
 
     @Test
@@ -159,7 +158,7 @@ class GameServiceTest {
         // given
         // when
         // then
-        assertThrows(ObjectNotFoundException.class, () -> sut.updateGame(invalidGameId, new Game()));
+        assertThrows(ObjectNotFoundException.class, () -> sut.updateGame(invalidGameId, new GameDTO(null, null, null, null, null, null)));
     }
 
     @Test
@@ -218,7 +217,6 @@ class GameServiceTest {
             sut.patchRating(validGameId, invalidRatingLowerEnd);
         } catch (OutOfBoundsRatingException ignored) {
         }
-        ;
 
         // then
         assertEquals(0, game.getReviewCount());
@@ -263,7 +261,7 @@ class GameServiceTest {
                 new GameDTO(validTitle, validDescription, null, validPlatform, validGenre, validId),
                 new GameDTO(validTitle, validDescription, validReleaseDate, "EXCEPTION", validGenre, validId),
                 new GameDTO(validTitle, validDescription, validReleaseDate, validPlatform, "EXCEPTION", validId)
-                );
+        );
     }
 
     @ParameterizedTest

@@ -16,29 +16,32 @@ class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping(value = "/add")
+    // TODO: Read if DTO validation should be handled on DTO level or at service level
+    // TODO: Refactor, return created content
+    // TODO: Read when it's okay to return unchecked exception. It's thrown for validating ReviewDTO
+    @PostMapping("/add")
     ResponseEntity<HttpStatus> addReview(@RequestBody ReviewDTO review) {
         reviewService.addReview(review);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     ResponseEntity<Review> getReview(@PathVariable int id){
         return new ResponseEntity<>(reviewService.getReview(id), HttpStatus.OK);
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     ResponseEntity<List<Review>> getReviews(){
         return new ResponseEntity<>(reviewService.getReviews(), HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<HttpStatus> deleteReview(@PathVariable int id){
         reviewService.deleteReview(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("all")
+    @DeleteMapping("/all")
     ResponseEntity<HttpStatus> deleteReviews(){
         reviewService.deleteAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

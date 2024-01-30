@@ -29,6 +29,7 @@ public class StudioController {
         return new ResponseEntity<>(studioService.getStudios(), HttpStatus.OK);
     }
 
+    // TODO: Refactor, return studio object
     @PutMapping("/{id}")
     ResponseEntity<HttpStatus> updateStudio(@PathVariable int id, @RequestBody StudioDTO studioDTO) {
         studioService.updateStudio(id, studioDTO);

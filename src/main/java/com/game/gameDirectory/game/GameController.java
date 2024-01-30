@@ -43,11 +43,12 @@ class GameController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // TODO: Refactor
     @PutMapping("{gameId}")
-    ResponseEntity<Game> updateGame(@PathVariable Integer gameId, @RequestBody Game game){
-        gameService.updateGame(gameId, game);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+    ResponseEntity<Game> updateGame(@PathVariable int gameId, @RequestBody GameDTO gameDTO){
+        return new ResponseEntity<>(
+                gameService.updateGame(gameId, gameDTO),
+                HttpStatus.OK
+        );
     }
 
     @PatchMapping("rating/{gameId}")

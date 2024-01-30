@@ -4,7 +4,6 @@ import com.game.gameDirectory.annotation.ExampleOnly;
 import com.game.gameDirectory.exceptions.*;
 import com.game.gameDirectory.game.enums.Genre;
 import com.game.gameDirectory.game.enums.Platform;
-import com.game.gameDirectory.review.Review;
 import com.game.gameDirectory.studio.Studio;
 import com.game.gameDirectory.studio.StudioService;
 import io.micrometer.common.util.StringUtils;
@@ -44,14 +43,29 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    void updateGame(int gameId, Game game) {
+    Game updateGame(int gameId, GameDTO gameDTO) {
         Game currentGame = getGame(gameId);
-        currentGame.setPlatform(game.getPlatform());
-        currentGame.setDescription(game.getDescription());
-        currentGame.setTitle(game.getTitle());
-        currentGame.setReleaseDate(game.getReleaseDate());
-        // Game rating and count gets updated by patch method
+
+        if (gameDTO.platform() != null) {
+            currentGame.setPlatform(
+                    validatePlatform(gameDTO.platform()));
+        }
+        if (gameDTO.genre() != null) {
+            currentGame.setGenre(
+                    validateGenre(gameDTO.genre()));
+        }
+        if (gameDTO.releaseDate() != null) {
+            currentGame.setReleaseDate(
+                    parseGameReleaseDate(gameDTO.releaseDate()));
+        }
+        if (gameDTO.title() != null) {
+            currentGame.setTitle(gameDTO.title());
+        }
+        if (gameDTO.description() != null) {
+            currentGame.setDescription(gameDTO.description());
+        }
         gameRepository.save(currentGame);
+        return currentGame;
     }
 
     float patchRating(int gameId, int newPartialRating) {
@@ -101,8 +115,8 @@ public class GameService {
 
         List<Game> games = studio.getGames();
 
-        if (!games.contains(game)){
-            List<Game> gamesToPersist = new ArrayList<>(games.size()+1);
+        if (!games.contains(game)) {
+            List<Game> gamesToPersist = new ArrayList<>(games.size() + 1);
             gamesToPersist.add(game);
             studio.setGames(gamesToPersist);
         }
@@ -115,26 +129,13 @@ public class GameService {
     Game validateDTO(GameDTO gameDTO) {
         Game game = new Game();
 
-        try {
-            game.setPlatform(
-                    Platform.valueOf(gameDTO.platform()));
-        } catch (Exception e) {
-            throw new InvalidDTOValueException("Platform of gameDTO is of invalid type! Use one of the following types: "
-                    + Arrays.stream(Platform.values())
-                    .map(Enum::name)
-                    .collect(Collectors.joining(", ")));
-        }
+        game.setPlatform(
+                validatePlatform(gameDTO.platform())
+        );
 
-        try {
-            game.setGenre(
-                    Genre.valueOf(gameDTO.genre())
-            );
-        } catch (Exception e) {
-            throw new InvalidDTOValueException("Genre of gameDTO is of invalid type! Use one of the following types: "
-                    + Arrays.stream(Genre.values()).map(
-                    Genre::name)
-                    .collect(Collectors.joining(", ")));
-        }
+        game.setGenre(
+                validateGenre(gameDTO.genre())
+        );
 
         if (StringUtils.isBlank(gameDTO.title())) {
             throw new InvalidDTOValueException("Title of gameDTO is Blank!");
@@ -150,24 +151,47 @@ public class GameService {
         game.setDescription(gameDTO.description());
         game.setReleaseDate(parseGameReleaseDate(gameDTO.releaseDate()));
 
-        if (gameDTO.studioId() != null){
+        if (gameDTO.studioId() != null) {
             game.setStudio(studioService.getStudio(gameDTO.studioId()));
         }
 
         return game;
     }
 
-    LocalDate parseGameReleaseDate(String releaseDate){
+    Platform validatePlatform(String platform) {
+        try {
+            return Platform.valueOf(platform);
+        } catch (Exception e) {
+            throw new InvalidDTOValueException("Platform of gameDTO is of invalid type! Use one of the following types: "
+                    + Arrays.stream(Platform.values())
+                    .map(Enum::name)
+                    .collect(Collectors.joining(", ")));
+        }
+    }
+
+    Genre validateGenre(String genre) {
+        try {
+            return Genre.valueOf(genre);
+        } catch (Exception e) {
+            throw new InvalidDTOValueException("Genre of gameDTO is of invalid type! Use one of the following types: "
+                    + Arrays.stream(Genre.values()).map(
+                            Genre::name)
+                    .collect(Collectors.joining(", ")));
+        }
+    }
+
+    LocalDate parseGameReleaseDate(String releaseDate) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-        try{
+        try {
             return LocalDate.parse(releaseDate, dateTimeFormatter);
-        }catch (DateTimeException e){
+        } catch (DateTimeException e) {
             throw new InvalidDateFormatException("Invalid date format! " +
                     "Provide date in expected format: yyyy-MM-dd");
         }
     }
 
     //region [Functionality testing methods. Ignore for development.]
+
     /**
      * This method does not automatically persist data as it is not transactional.
      *
@@ -186,8 +210,8 @@ public class GameService {
 
         List<Game> games = studio.getGames();
 
-        if (!games.contains(game)){
-            List<Game> gamesToNotPersist = new ArrayList<>(games.size()+1);
+        if (!games.contains(game)) {
+            List<Game> gamesToNotPersist = new ArrayList<>(games.size() + 1);
             gamesToNotPersist.add(game);
             studio.setGames(gamesToNotPersist);
         }
@@ -201,13 +225,13 @@ public class GameService {
      * Issue: I suspected that unmodifiable list is not needed for List getters, since hibernate is blocking modifications that way by itself.
      * This suspicion arouse during work on {@link GameService#assignToStudio(int, int)} method,
      * which disallowed me to modify list directly on integration test.
-     * 
+     *
      * <p>Answer: Suspicion is invalid in real life. It is possible to add elements to getter that is not set to unmodifiable.
      * Issue tested via postman.
      */
     @ExampleOnly
     @Transactional
-    String modifyGameListFromGetter(){
+    String modifyGameListFromGetter() {
         Game game = getGame(1);
         Studio studio = studioService.getStudio(1);
         studio.getGames().add(game);
