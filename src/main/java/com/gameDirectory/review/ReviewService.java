@@ -1,8 +1,10 @@
 package com.gameDirectory.review;
 
+import com.gameDirectory.exceptions.InvalidDTOValueException;
 import com.gameDirectory.exceptions.ObjectNotFoundException;
 import com.gameDirectory.game.Game;
 import com.gameDirectory.game.GameService;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +20,13 @@ class ReviewService {
         this.gameService = gameService;
     }
 
-    void addReview(ReviewDTO review){
-        Game game = gameService.getGame(review.gameId());
-        gameService.patchRating(game, review.rating());
+    void addReview(ReviewDTO reviewDTO){
+        validateDTO(reviewDTO);
+
+        Game game = gameService.getGame(reviewDTO.gameId());
+        gameService.patchRating(game, reviewDTO.rating());
         reviewRepository.save(
-                new Review(game, review.comment(), review.rating()));
+                new Review(game, reviewDTO.comment(), reviewDTO.rating()));
     }
 
     Review getReview(int reviewId){
@@ -60,5 +64,17 @@ class ReviewService {
         // Update the game's rating and review count
         game.setRating(newRating);
         game.setReviewCount(game.getReviewCount() - 1);
+    }
+
+    void validateDTO(ReviewDTO reviewDTO) {
+        if (reviewDTO.gameId() == null){
+            throw new InvalidDTOValueException("gameID of review must not be null!");
+        }
+        if (StringUtils.isBlank(reviewDTO.comment())){
+            throw new InvalidDTOValueException("Comment of review must not be blank!");
+        }
+        if (reviewDTO.rating() == null){
+            throw new InvalidDTOValueException("Rating of review must not be null!");
+        }
     }
 }

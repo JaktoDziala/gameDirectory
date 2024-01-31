@@ -1,7 +1,11 @@
 package com.gameDirectory.game;
 
 import com.gameDirectory.annotation.ExampleOnly;
-import com.gameDirectory.exceptions.*;
+import com.gameDirectory.exceptions.InvalidDTOValueException;
+import com.gameDirectory.exceptions.InvalidDateFormatException;
+import com.gameDirectory.exceptions.NullObjectException;
+import com.gameDirectory.exceptions.ObjectNotFoundException;
+import com.gameDirectory.exceptions.OutOfBoundsRatingException;
 import com.gameDirectory.game.enums.Genre;
 import com.gameDirectory.game.enums.Platform;
 import com.gameDirectory.studio.Studio;
@@ -29,8 +33,21 @@ public class GameService {
     }
 
     public Game addGame(GameDTO gameDTO) {
+        validateDTO(gameDTO);
+        Studio studio = null;
+        if (gameDTO.studioId() != null) {
+            studio = studioService.getStudio(gameDTO.studioId());
+        }
+
         return gameRepository.save(
-                validateDTO(gameDTO)
+                new Game(
+                        gameDTO.title(),
+                        gameDTO.description(),
+                        parseGameReleaseDate(gameDTO.releaseDate()),
+                        parsePlatform(gameDTO.platform()),
+                        studio,
+                        parseGenre(gameDTO.genre())
+                )
         );
     }
 
@@ -48,11 +65,11 @@ public class GameService {
 
         if (gameDTO.platform() != null) {
             currentGame.setPlatform(
-                    validatePlatform(gameDTO.platform()));
+                    parsePlatform(gameDTO.platform()));
         }
         if (gameDTO.genre() != null) {
             currentGame.setGenre(
-                    validateGenre(gameDTO.genre()));
+                    parseGenre(gameDTO.genre()));
         }
         if (gameDTO.releaseDate() != null) {
             currentGame.setReleaseDate(
@@ -126,17 +143,7 @@ public class GameService {
                 "Studio: \"" + studio.getName() + "\"";
     }
 
-    Game validateDTO(GameDTO gameDTO) {
-        Game game = new Game();
-
-        game.setPlatform(
-                validatePlatform(gameDTO.platform())
-        );
-
-        game.setGenre(
-                validateGenre(gameDTO.genre())
-        );
-
+    void validateDTO(GameDTO gameDTO) {
         if (StringUtils.isBlank(gameDTO.title())) {
             throw new InvalidDTOValueException("Title of gameDTO is Blank!");
         }
@@ -146,19 +153,9 @@ public class GameService {
         if (StringUtils.isBlank(gameDTO.releaseDate())) {
             throw new InvalidDTOValueException("Release Date of gameDTO is Blank!");
         }
-
-        game.setTitle(gameDTO.title());
-        game.setDescription(gameDTO.description());
-        game.setReleaseDate(parseGameReleaseDate(gameDTO.releaseDate()));
-
-        if (gameDTO.studioId() != null) {
-            game.setStudio(studioService.getStudio(gameDTO.studioId()));
-        }
-
-        return game;
     }
 
-    Platform validatePlatform(String platform) {
+    Platform parsePlatform(String platform) {
         try {
             return Platform.valueOf(platform);
         } catch (Exception e) {
@@ -169,7 +166,7 @@ public class GameService {
         }
     }
 
-    Genre validateGenre(String genre) {
+    Genre parseGenre(String genre) {
         try {
             return Genre.valueOf(genre);
         } catch (Exception e) {

@@ -258,9 +258,7 @@ class GameServiceTest {
         return Stream.of(
                 new GameDTO(null, validDescription, validReleaseDate, validPlatform, validGenre, validId),
                 new GameDTO(validTitle, null, validReleaseDate, validPlatform, validGenre, validId),
-                new GameDTO(validTitle, validDescription, null, validPlatform, validGenre, validId),
-                new GameDTO(validTitle, validDescription, validReleaseDate, "EXCEPTION", validGenre, validId),
-                new GameDTO(validTitle, validDescription, validReleaseDate, validPlatform, "EXCEPTION", validId)
+                new GameDTO(validTitle, validDescription, null, validPlatform, validGenre, validId)
         );
     }
 

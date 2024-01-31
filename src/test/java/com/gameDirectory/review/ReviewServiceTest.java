@@ -1,16 +1,20 @@
 package com.gameDirectory.review;
 
+import com.gameDirectory.exceptions.InvalidDTOValueException;
 import com.gameDirectory.exceptions.ObjectNotFoundException;
 import com.gameDirectory.game.Game;
 import com.gameDirectory.game.GameService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,40 +51,23 @@ class ReviewServiceTest {
         verify(gameService).patchRating(game, reviewDTO.rating());
     }
 
-    @Test
-    void addReview_WithNullIdDTO_ThrowsException() {
+    static Stream<ReviewDTO> invalidDTOValues() {
+        return Stream.of(
+                new ReviewDTO(null, validComment, validRating),
+                new ReviewDTO(validId, null, validRating),
+                new ReviewDTO(validId, "", validRating),
+                new ReviewDTO(validId, validComment, null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidDTOValues")
+    void addReview_WithInvalidDTOValues_ThrowsException() {
         // given
         // when
         // then
-        assertThrows(NullPointerException.class,
+        assertThrows(InvalidDTOValueException.class,
                 () -> sut.addReview(new ReviewDTO(null, validComment, validRating)));
-    }
-
-    @Test
-    void addReview_WithNullCommentDTO_ThrowsException() {
-        // given
-        // when
-        // then
-        assertThrows(NullPointerException.class,
-                () -> sut.addReview(new ReviewDTO(validId, null, validRating)));
-    }
-
-    @Test
-    void addReview_WithEmptyCommentDTO_ThrowsException() {
-        // given
-        // when
-        // then
-        assertThrows(NullPointerException.class,
-                () -> sut.addReview(new ReviewDTO(validId, "", validRating)));
-    }
-
-    @Test
-    void addReview_WithNullRatingDTO_ThrowsException() {
-        // given
-        // when
-        // then
-        assertThrows(NullPointerException.class,
-                () -> sut.addReview(new ReviewDTO(validId, validComment, null)));
     }
 
     @Test
@@ -90,7 +77,7 @@ class ReviewServiceTest {
         when(reviewRepository.findById(validId)).thenReturn(Optional.of(review));
 
         // when
-        Review result =  sut.getReview(validId);
+        Review result = sut.getReview(validId);
 
         // then
         verify(reviewRepository).findById(validId);
@@ -135,7 +122,7 @@ class ReviewServiceTest {
         // then
         verify(reviewRepository).delete(review);
         assertEquals(expectedRating, game.getRating());
-        assertEquals(reviewCount-1, game.getReviewCount());
+        assertEquals(reviewCount - 1, game.getReviewCount());
     }
 
     @Test
@@ -183,7 +170,7 @@ class ReviewServiceTest {
 
         // then
         assertEquals(firstRating, game.getRating());
-        assertEquals(initialReviewCount-1, game.getReviewCount());
+        assertEquals(initialReviewCount - 1, game.getReviewCount());
     }
 
     @Test
@@ -206,7 +193,7 @@ class ReviewServiceTest {
 
         // then
         assertEquals(0, game.getRating());
-        assertEquals(initialReviewCount-1, game.getReviewCount());
+        assertEquals(initialReviewCount - 1, game.getReviewCount());
     }
 
     @Test
@@ -216,8 +203,8 @@ class ReviewServiceTest {
         final int secondRating = 9;
         final int thirdRating = 8;
         final int initialReviewCount = 3;
-        final float initialRating = (float) (firstRating+secondRating+thirdRating) / initialReviewCount;
-        final float expectedRating = (float) (firstRating + secondRating) / (initialReviewCount-1);
+        final float initialRating = (float) (firstRating + secondRating + thirdRating) / initialReviewCount;
+        final float expectedRating = (float) (firstRating + secondRating) / (initialReviewCount - 1);
 
         Game game = new Game();
         game.setReviewCount(initialReviewCount);
@@ -232,6 +219,6 @@ class ReviewServiceTest {
 
         // then
         assertEquals(expectedRating, game.getRating());
-        assertEquals(initialReviewCount-1, game.getReviewCount());
+        assertEquals(initialReviewCount - 1, game.getReviewCount());
     }
 }

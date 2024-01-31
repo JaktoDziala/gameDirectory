@@ -1,6 +1,8 @@
 package com.gameDirectory.studio;
 
+import com.gameDirectory.exceptions.InvalidDTOValueException;
 import com.gameDirectory.exceptions.ObjectNotFoundException;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +16,8 @@ public class StudioService {
         this.studioRepository = studioRepository;
     }
 
-    // TODO: Refactor, validate DTO like in gameDTO
     public Studio addStudio(StudioDTO studioDTO) {
+        validateDTO(studioDTO);
         Studio studio = new Studio(
                 studioDTO.name(),
                 studioDTO.description(),
@@ -53,5 +55,14 @@ public class StudioService {
 
     void deleteStudios() {
         studioRepository.deleteAll();
+    }
+
+    void validateDTO(StudioDTO studioDTO){
+        if (StringUtils.isBlank(studioDTO.name())){
+            throw new InvalidDTOValueException("Name of studioDTO must not be blank!");
+        }
+        if (StringUtils.isBlank(studioDTO.description())){
+            throw new InvalidDTOValueException("Description of studioDTO must not be blank!");
+        }
     }
 }
