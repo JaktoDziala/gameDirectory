@@ -10,7 +10,6 @@ import com.gameDirectory.game.enums.Genre;
 import com.gameDirectory.game.enums.Platform;
 import com.gameDirectory.studio.Studio;
 import com.gameDirectory.studio.StudioService;
-import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +32,6 @@ public class GameService {
     }
 
     public Game addGame(GameDTO gameDTO) {
-        validateDTO(gameDTO);
         Studio studio = null;
         if (gameDTO.studioId() != null) {
             studio = studioService.getStudio(gameDTO.studioId());
@@ -94,8 +92,6 @@ public class GameService {
     }
 
     float updateGameRating(Game game, int newPartialRating) throws OutOfBoundsRatingException {
-        if (newPartialRating > 10 || newPartialRating < 1)
-            throw new OutOfBoundsRatingException(newPartialRating);
         game.setReviewCount(game.getReviewCount() + 1);
 
         float oldRating = game.getRating();
@@ -141,18 +137,6 @@ public class GameService {
         game.setStudio(studio);
         return "Game: \"" + game.getTitle() + "\" studio set to " +
                 "Studio: \"" + studio.getName() + "\"";
-    }
-
-    void validateDTO(GameDTO gameDTO) {
-        if (StringUtils.isBlank(gameDTO.title())) {
-            throw new InvalidDTOValueException("Title of gameDTO is Blank!");
-        }
-        if (StringUtils.isBlank(gameDTO.description())) {
-            throw new InvalidDTOValueException("Description of gameDTO is Blank!");
-        }
-        if (StringUtils.isBlank(gameDTO.releaseDate())) {
-            throw new InvalidDTOValueException("Release Date of gameDTO is Blank!");
-        }
     }
 
     Platform parsePlatform(String platform) {

@@ -36,7 +36,7 @@ public class GameControllerTest {
     @Test
     void addGame_withValidObject_returnsStatusCode201() throws Exception {
         mockMvc.perform(post("/v1/game/add")
-                        .content(JsonUtil.marshalJson(new Game()))
+                        .content(JsonUtil.marshalJson(new GameDTO("title", "description","2000-04-04","", "", validId)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }

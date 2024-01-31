@@ -1,6 +1,7 @@
 package com.gameDirectory.game;
 
 import com.gameDirectory.annotation.ExampleOnly;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,7 @@ class GameController {
     }
 
     @PostMapping("add")
-    ResponseEntity<Game> addGame(@RequestBody GameDTO gameDTO){
+    ResponseEntity<Game> addGame(@Valid @RequestBody GameDTO gameDTO){
         return new ResponseEntity<>(gameService.addGame(gameDTO), HttpStatus.CREATED);
     }
 

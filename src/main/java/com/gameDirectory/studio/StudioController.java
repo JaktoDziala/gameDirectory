@@ -1,5 +1,6 @@
 package com.gameDirectory.studio;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +23,7 @@ public class StudioController {
     public StudioController(StudioService studioService) { this.studioService = studioService; }
 
     @PostMapping("/add")
-    ResponseEntity<Studio> addStudio(@RequestBody StudioDTO studioDTO) {
+    ResponseEntity<Studio> addStudio(@Valid @RequestBody StudioDTO studioDTO) {
         return new ResponseEntity<>(studioService.addStudio(studioDTO), HttpStatus.CREATED);
     }
 

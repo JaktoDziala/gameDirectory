@@ -1,10 +1,8 @@
 package com.gameDirectory.game;
 
-import com.gameDirectory.exceptions.InvalidDTOValueException;
 import com.gameDirectory.exceptions.InvalidDateFormatException;
 import com.gameDirectory.exceptions.NullObjectException;
 import com.gameDirectory.exceptions.ObjectNotFoundException;
-import com.gameDirectory.exceptions.OutOfBoundsRatingException;
 import com.gameDirectory.game.enums.Genre;
 import com.gameDirectory.game.enums.Platform;
 import com.gameDirectory.studio.StudioService;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,7 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -206,36 +202,6 @@ class GameServiceTest {
     }
 
     @Test
-    void patchRating_withNotValidRating_doesNotIncreaseReviewCount() throws OutOfBoundsRatingException {
-        // given
-        int invalidRatingLowerEnd = 0;
-        Game game = new Game();
-        when(gameRepository.findById(validGameId)).thenReturn(Optional.of(game));
-
-        // when
-        try {
-            sut.patchRating(validGameId, invalidRatingLowerEnd);
-        } catch (OutOfBoundsRatingException ignored) {
-        }
-
-        // then
-        assertEquals(0, game.getReviewCount());
-    }
-
-    @Test
-    void patchRating_withInvalidRating_throwsException() {
-        // given
-        int invalidRatingLowerEnd = 0;
-        int invalidRatingHigherEnd = 0;
-        when(gameRepository.findById(validGameId)).thenReturn(Optional.of(new Game()));
-
-        // when
-        // then
-        assertThrows(OutOfBoundsRatingException.class, () -> sut.patchRating(validGameId, invalidRatingLowerEnd));
-        assertThrows(OutOfBoundsRatingException.class, () -> sut.patchRating(validGameId, invalidRatingHigherEnd));
-    }
-
-    @Test
     void parseGameReleaseDate_withDateInValidFormat_returnsDate() {
         // given
         final String validDateFormat = "2000-02-06";
@@ -245,27 +211,6 @@ class GameServiceTest {
 
         // then
         assertEquals(validDateFormat, result.toString());
-    }
-
-    static Stream<GameDTO> gameDTOStream() {
-        String validTitle = "Title";
-        String validDescription = "Description";
-        String validReleaseDate = "06-02-2000";
-        String validPlatform = Platform.PC.toString();
-        String validGenre = Genre.ACTION.toString();
-        int validId = 1;
-
-        return Stream.of(
-                new GameDTO(null, validDescription, validReleaseDate, validPlatform, validGenre, validId),
-                new GameDTO(validTitle, null, validReleaseDate, validPlatform, validGenre, validId),
-                new GameDTO(validTitle, validDescription, null, validPlatform, validGenre, validId)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("gameDTOStream")
-    void validateDTO_withInvalidValuesDTO_ThrowsException(GameDTO gameDTO) {
-        assertThrows(InvalidDTOValueException.class, () -> sut.validateDTO(gameDTO));
     }
 
     @CsvSource({

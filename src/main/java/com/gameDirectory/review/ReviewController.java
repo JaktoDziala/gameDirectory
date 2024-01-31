@@ -1,5 +1,6 @@
 package com.gameDirectory.review;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,13 +23,9 @@ class ReviewController {
         this.reviewService = reviewService;
     }
 
-    // TODO: Read if DTO validation should be handled on DTO level or at service level
-    // TODO: Refactor, return created content
-    // TODO: Read when it's okay to return unchecked exception. It's thrown for validating ReviewDTO
     @PostMapping("/add")
-    ResponseEntity<HttpStatus> addReview(@RequestBody ReviewDTO review) {
-        reviewService.addReview(review);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    ResponseEntity<Review> addReview(@Valid @RequestBody ReviewDTO review) {
+        return new ResponseEntity<>(reviewService.addReview(review), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

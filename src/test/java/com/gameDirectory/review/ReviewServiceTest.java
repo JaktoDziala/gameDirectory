@@ -1,20 +1,16 @@
 package com.gameDirectory.review;
 
-import com.gameDirectory.exceptions.InvalidDTOValueException;
 import com.gameDirectory.exceptions.ObjectNotFoundException;
 import com.gameDirectory.game.Game;
 import com.gameDirectory.game.GameService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,25 +45,6 @@ class ReviewServiceTest {
         // then
         verify(reviewRepository).save(Mockito.any());
         verify(gameService).patchRating(game, reviewDTO.rating());
-    }
-
-    static Stream<ReviewDTO> invalidDTOValues() {
-        return Stream.of(
-                new ReviewDTO(null, validComment, validRating),
-                new ReviewDTO(validId, null, validRating),
-                new ReviewDTO(validId, "", validRating),
-                new ReviewDTO(validId, validComment, null)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("invalidDTOValues")
-    void addReview_WithInvalidDTOValues_ThrowsException() {
-        // given
-        // when
-        // then
-        assertThrows(InvalidDTOValueException.class,
-                () -> sut.addReview(new ReviewDTO(null, validComment, validRating)));
     }
 
     @Test
