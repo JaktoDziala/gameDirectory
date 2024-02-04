@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 record ReviewDTO(
-        @NotNull(message = "gameId is required")
+        @NotNull(message = "GameId is required!")
         Integer gameId,
-        @NotBlank(message = "comment is required")
+        @NotBlank(message = "Comment is required!")
         String comment,
-        @NotNull(message = "rating is required")
-        @Min(value = 1, message = "rating must be at least 1")
-        @Max(value = 10, message = "rating must be at most 10")
+        @NotNull(message = "Rating is required!")
+        @Min(value = 1, message = "Rating must be at least 1!")
+        @Max(value = 10, message = "Rating must be at most 10!")
         Integer rating) {
 }

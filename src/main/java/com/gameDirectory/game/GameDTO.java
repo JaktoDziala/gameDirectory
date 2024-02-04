@@ -9,7 +9,9 @@ public record GameDTO(
         String description,
         @NotBlank(message = "Release date cannot be blank!")
         String releaseDate,
+        @NotBlank(message = "Platform is required!")
         String platform,
+        @NotBlank(message = "Genre is required!")
         String genre,
         Integer studioId
 ) {

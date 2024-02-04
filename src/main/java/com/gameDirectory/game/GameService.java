@@ -1,11 +1,7 @@
 package com.gameDirectory.game;
 
 import com.gameDirectory.annotation.ExampleOnly;
-import com.gameDirectory.exceptions.InvalidDTOValueException;
-import com.gameDirectory.exceptions.InvalidDateFormatException;
-import com.gameDirectory.exceptions.NullObjectException;
-import com.gameDirectory.exceptions.ObjectNotFoundException;
-import com.gameDirectory.exceptions.OutOfBoundsRatingException;
+import com.gameDirectory.exceptions.*;
 import com.gameDirectory.game.enums.Genre;
 import com.gameDirectory.game.enums.Platform;
 import com.gameDirectory.studio.Studio;
@@ -59,6 +55,33 @@ public class GameService {
     }
 
     Game updateGame(int gameId, GameDTO gameDTO) {
+        Game currentGame = getGame(gameId);
+
+        if (gameDTO.platform() != null) {
+            currentGame.setPlatform(
+                    parsePlatform(gameDTO.platform()));
+        }
+        if (gameDTO.genre() != null) {
+            currentGame.setGenre(
+                    parseGenre(gameDTO.genre()));
+        }
+        if (gameDTO.releaseDate() != null) {
+            currentGame.setReleaseDate(
+                    parseGameReleaseDate(gameDTO.releaseDate()));
+        }
+        if (gameDTO.title() != null) {
+            currentGame.setTitle(gameDTO.title());
+        }
+        if (gameDTO.description() != null) {
+            currentGame.setDescription(gameDTO.description());
+        }
+        gameRepository.save(currentGame);
+        return currentGame;
+    }
+
+    // TODO Check correct way of PUTTING vs PATCHING.
+    @ExampleOnly
+    Game patchGame(int gameId, GameDTO gameDTO) {
         Game currentGame = getGame(gameId);
 
         if (gameDTO.platform() != null) {

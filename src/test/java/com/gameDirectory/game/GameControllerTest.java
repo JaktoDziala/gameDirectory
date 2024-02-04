@@ -3,6 +3,8 @@ package com.gameDirectory.game;
 import com.gameDirectory.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import java.util.stream.Stream;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GameController.class)
@@ -32,13 +32,37 @@ public class GameControllerTest {
     private MockMvc mockMvc;
 
     private static final int validId = 1;
+    private static final String validTitle = "title";
+    private static final String validDescription = "description";
+    private static final String validReleaseDate = "2000-02-06";
+    private static final String validPlatform = "XBOX";
+    private static final String validGenre = "ACTION";
 
     @Test
-    void addGame_withValidObject_returnsStatusCode201() throws Exception {
+    void addGame_withValidDTO_returnsStatusCode201() throws Exception {
         mockMvc.perform(post("/v1/game/add")
-                        .content(JsonUtil.marshalJson(new GameDTO("title", "description","2000-04-04","", "", validId)))
+                        .content(JsonUtil.marshalJson(new GameDTO("title", "description", "2000-04-04", "Not blank", "Not blank", validId)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
+    }
+
+    public static Stream<GameDTO> notValidDTOs() {
+        return Stream.of(
+                new GameDTO(null, null, null, null, null, null),
+                new GameDTO(validTitle, null, null, null, null, null),
+                new GameDTO(validTitle, validDescription, null, null, null, null),
+                new GameDTO(validTitle, validDescription, validReleaseDate, null, null, null),
+                new GameDTO(validTitle, validDescription, validReleaseDate, validPlatform, null, null)
+        );
+    }
+
+    @MethodSource("notValidDTOs")
+    @ParameterizedTest
+    void addGame_withNotValidRequiredDTOValues_returnsStatusCode400(GameDTO value) throws Exception {
+        mockMvc.perform(post("/v1/game/add")
+                        .content(JsonUtil.marshalJson(value))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

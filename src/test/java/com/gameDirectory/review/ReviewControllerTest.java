@@ -4,6 +4,8 @@ import com.gameDirectory.util.JsonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -11,9 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.stream.Stream;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,17 +31,35 @@ class ReviewControllerTest {
     private final static int validRating = 2;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(sut).build();
     }
 
     @Test
-    void addReview_withValidObject_returnsStatusCode201() throws Exception{
-        ReviewDTO review = new ReviewDTO(validId, validComment, validRating); // Create a ReviewDTO with necessary data
+    void addReview_withValidDTO_returnsStatusCode201() throws Exception {
+        ReviewDTO review = new ReviewDTO(validId, validComment, validRating);
         mockMvc.perform(post("/v1/review/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.marshalJson(review)))
                 .andExpect(status().isCreated());
+    }
+
+
+    public static Stream<ReviewDTO> notValidDTOs() {
+        return Stream.of(
+                new ReviewDTO(null, null, null),
+                new ReviewDTO(validId, null, null),
+                new ReviewDTO(validId, validComment, null)
+        );
+    }
+
+    @MethodSource("notValidDTOs")
+    @ParameterizedTest
+    void addReview_withNotValidDTOValues_returnsStatusCode400(ReviewDTO reviewDTO) throws Exception {
+        mockMvc.perform(post("/v1/review/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.marshalJson(reviewDTO)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
