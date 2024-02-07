@@ -4,15 +4,23 @@ import com.gameDirectory.game.enums.Genre;
 import com.gameDirectory.game.enums.Platform;
 import com.gameDirectory.review.Review;
 import com.gameDirectory.studio.Studio;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -33,7 +41,7 @@ public class Game {
     private Float rating = 0.f;
     private Integer reviewCount = 0;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
+    private Set<Review> reviews = new HashSet<>();
     @ManyToOne
     private Studio studio;
 
@@ -46,8 +54,7 @@ public class Game {
         this.genre = genre;
     }
 
-    // TODO: List vs Set for saving to DB
-    public List<Review> getReviews(){
-        return Collections.unmodifiableList(reviews);
+    public Set<Review> getReviews(){
+        return Collections.unmodifiableSet(reviews);
     }
 }

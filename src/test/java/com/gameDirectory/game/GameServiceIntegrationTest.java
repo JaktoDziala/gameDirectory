@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,7 +33,7 @@ public class GameServiceIntegrationTest {
         Studio studio = studioService.addStudio(new StudioDTO(
                 validName,
                 "Transactional studio",
-                List.of()
+                Set.of()
         ));
         Game game = sut.addGame(new GameDTO(
                 "Transactional name", "x", "2000-02-06", "PC", "ACTION", null)
@@ -43,7 +44,7 @@ public class GameServiceIntegrationTest {
 
         // then
         assertEquals(sut.getGame(dbIndexStartNumber).getStudio(), studio);
-        assertEquals(studioService.getStudio(dbIndexStartNumber).getGames().getFirst(), game);
+        assertEquals(studioService.getStudio(dbIndexStartNumber).getGames().stream().findFirst(), Optional.of(game));
 
         // Combats indexing not resetting on database clear after each test. FIXME
         dbIndexStartNumber++;
@@ -56,7 +57,7 @@ public class GameServiceIntegrationTest {
         Studio studio = studioService.addStudio(new StudioDTO(
                 validName,
                 "Non-transactional studio",
-                List.of()
+                Set.of()
         ));
         Game game = sut.addGame(new GameDTO(
                 "Non-transactional name", "x", "2000-02-06", "PC", "ACTION", null)
@@ -67,6 +68,6 @@ public class GameServiceIntegrationTest {
 
         // then
         assertEquals(sut.getGame(dbIndexStartNumber).getStudio(), studio);
-        assertEquals(studioService.getStudio(dbIndexStartNumber).getGames().getFirst(), game);
+        assertEquals(studioService.getStudio(dbIndexStartNumber).getGames().stream().findFirst(), Optional.of(game));
     }
 }

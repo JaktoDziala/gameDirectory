@@ -1,7 +1,11 @@
 package com.gameDirectory.game;
 
 import com.gameDirectory.annotation.ExampleOnly;
-import com.gameDirectory.exceptions.*;
+import com.gameDirectory.exceptions.InvalidDTOValueException;
+import com.gameDirectory.exceptions.InvalidDateFormatException;
+import com.gameDirectory.exceptions.NullObjectException;
+import com.gameDirectory.exceptions.ObjectNotFoundException;
+import com.gameDirectory.exceptions.OutOfBoundsRatingException;
 import com.gameDirectory.game.enums.Genre;
 import com.gameDirectory.game.enums.Platform;
 import com.gameDirectory.studio.Studio;
@@ -12,9 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -149,10 +154,10 @@ public class GameService {
         Game game = getGame(gameId);
         Studio studio = studioService.getStudio(studioId);
 
-        List<Game> games = studio.getGames();
+        Set<Game> games = studio.getGames();
 
         if (!games.contains(game)) {
-            List<Game> gamesToPersist = new ArrayList<>(games.size() + 1);
+            Set<Game> gamesToPersist = new HashSet<>(games.size() + 1);
             gamesToPersist.add(game);
             studio.setGames(gamesToPersist);
         }
@@ -212,10 +217,10 @@ public class GameService {
         Game game = getGame(gameId);
         Studio studio = studioService.getStudio(studioId);
 
-        List<Game> games = studio.getGames();
+        Set<Game> games = studio.getGames();
 
         if (!games.contains(game)) {
-            List<Game> gamesToNotPersist = new ArrayList<>(games.size() + 1);
+            Set<Game> gamesToNotPersist = new HashSet<>(games.size() + 1);
             gamesToNotPersist.add(game);
             studio.setGames(gamesToNotPersist);
         }
@@ -240,7 +245,7 @@ public class GameService {
         Studio studio = studioService.getStudio(1);
         studio.getGames().add(game);
         game.setStudio(studio);
-        List<Game> games2 = studio.getGames();
+        Set<Game> games2 = studio.getGames();
         return games2.toString();
     }
     //endregion

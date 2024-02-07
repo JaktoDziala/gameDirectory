@@ -2,13 +2,21 @@ package com.gameDirectory.studio;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gameDirectory.game.Game;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,11 +35,15 @@ public class Studio {
 
     @JsonIgnore
     @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Game> games;
+    private Set<Game> games = new HashSet<>();
 
-    public Studio(String name, String description, List<Game> games) {
+    public Studio(String name, String description, Set<Game> games) {
         this.name = name;
         this.description = description;
         this.games = games;
+    }
+
+    public Set<Game> getGames() {
+        return games == null ? Collections.emptySet() : Collections.unmodifiableSet(games);
     }
 }

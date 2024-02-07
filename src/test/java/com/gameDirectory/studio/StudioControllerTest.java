@@ -12,13 +12,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,12 +42,12 @@ class StudioControllerTest {
 
     @BeforeEach
     void setUp(){
-        studioDTO = new StudioDTO(validName, validDescription, List.of());
+        studioDTO = new StudioDTO(validName, validDescription, Set.of());
     }
 
     @Test
     void addStudio_withValidDTO_returnsStatusCode201() throws Exception {
-        Studio studio = new Studio(validName, validDescription, List.of());
+        Studio studio = new Studio(validName, validDescription, Set.of());
         when(studioService.addStudio(studioDTO)).thenReturn(studio);
         mockMvc.perform(post("/v1/studio/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -100,7 +104,7 @@ class StudioControllerTest {
         mockMvc.perform(put("/v1/studio/" + validId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.marshalJson(
-                        new StudioDTO(validName, validDescription, List.of())
+                        new StudioDTO(validName, validDescription, Set.of())
                 )))
                 .andExpect(status().isOk());
     }

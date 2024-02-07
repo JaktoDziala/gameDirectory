@@ -16,7 +16,6 @@ public class GameDirectoryApplication {
     // TODO: Design patterns, find suitable for the project. Now or later?
     // TODO: Check saving Lists to DB as json string
     // TODO: Check what happens when param is in form of request body vs param.
-    // TODO X: Add controller tests for Validating fields. It should replace service validation DTO to controller
     public static void main(String[] args) {
         SpringApplication.run(GameDirectoryApplication.class, args);
     }
