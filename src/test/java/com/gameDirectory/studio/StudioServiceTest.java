@@ -9,11 +9,16 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StudioServiceTest {
@@ -38,7 +43,7 @@ class StudioServiceTest {
         // then
         verify(studioRepository).save(Mockito.any(Studio.class));
         assertEquals(validDescription, result.getDescription());
-        assertNull(result.getGames());
+        assertEquals(result.getGames(), new HashSet<>());
     }
 
     @Test
@@ -85,7 +90,7 @@ class StudioServiceTest {
     @Test
     void updateStudio_withValidDescriptionOnly_updatesOnlyDescription() {
         // given
-        Studio studio = new Studio(validName, validDescription, new ArrayList<>());
+        Studio studio = new Studio(validName, validDescription, new HashSet<>());
         StudioDTO studioDTO = new StudioDTO(
                 validName,
                 "xxx",
@@ -105,11 +110,11 @@ class StudioServiceTest {
     @Test
     void updateStudio_withValidGamesOnly_updatesOnlyGamesList() {
         // given
-        Studio studio = new Studio(validName, validDescription, new ArrayList<>());
+        Studio studio = new Studio(validName, validDescription, new HashSet<>());
         StudioDTO studioDTO = new StudioDTO(
                 validName,
                 null,
-                new ArrayList<>()
+                new HashSet<>()
         );
         when(studioRepository.findById(validId)).thenReturn(Optional.of(studio));
 
@@ -129,7 +134,7 @@ class StudioServiceTest {
         StudioDTO studioDTO = new StudioDTO(
                 validName,
                 null,
-                new ArrayList<>()
+                new HashSet<>()
         );
 
         // when

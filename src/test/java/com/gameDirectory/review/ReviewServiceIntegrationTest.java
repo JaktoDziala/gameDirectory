@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @Import({ReviewService.class, GameService.class, StudioService.class})
@@ -75,7 +79,7 @@ public class ReviewServiceIntegrationTest {
         ReviewDTO reviewDTO = new ReviewDTO(game.getId(), "xd", 3);
         sut.addReview(reviewDTO);
         // always null
-        List<Review> reviewsBeforeDelete = gameService.getGame(game.getId()).getReviews();
+        Set<Review> reviewsBeforeDelete = gameService.getGame(game.getId()).getReviews();
         // when
         sut.deleteReview(sut.getReview(1));
         // then
