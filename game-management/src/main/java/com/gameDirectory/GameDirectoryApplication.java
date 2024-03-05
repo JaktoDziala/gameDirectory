@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
  *
  */
 @SpringBootApplication
-@EntityScan("com.gameDirectory")
 public class GameDirectoryApplication {
     // TODO: Check what happens when param is in form of request body vs param.
     public static void main(String[] args) {
