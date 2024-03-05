@@ -40,8 +40,6 @@ public class ReviewServiceIntegrationTest {
     @Test
     void addReview_WithValidDTO_PatchesRating() {
         // given
-        // TODO: Add assigning game to studio
-        // TODO: INTEGRATION TEST. If game is assigned to studio, is studio game count increased
         Game game = gameService.addGame(new GameDTO("title",
                 "description",
                 "2000-02-06",

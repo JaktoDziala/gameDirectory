@@ -46,7 +46,6 @@ public class Game {
         this.genre = genre;
     }
 
-    // TODO: List vs Set for saving to DB
     public List<Review> getReviews(){
         return Collections.unmodifiableList(reviews);
     }

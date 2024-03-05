@@ -34,7 +34,7 @@ public class StudioService {
         return studioRepository.findAll();
     }
 
-    void updateStudio(int id, StudioDTO studio) {
+    Studio updateStudio(int id, StudioDTO studio) {
         Studio oldStudio = getStudio(id);
         if (studio.name() != null)
             oldStudio.setName(studio.name());
@@ -43,7 +43,7 @@ public class StudioService {
         if (studio.games() != null)
             oldStudio.setGames(studio.games());
 
-        studioRepository.save(oldStudio);
+        return studioRepository.save(oldStudio);
     }
 
     void deleteStudio(int id) {
