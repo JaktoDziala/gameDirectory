@@ -64,7 +64,7 @@
 		<module>game-management</module>
 		<module>event-service</module>
 	</modules>
-
+*-/+
 	<build>
 		<plugins>
 			<plugin>
