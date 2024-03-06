@@ -62,7 +62,7 @@
 
 	<modules>
 		<module>game-management</module>
-		<module>survey-service</module>
+		<module>event-service</module>
 	</modules>
 
 	<build>
