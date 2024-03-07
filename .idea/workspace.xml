@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9b134c6f-ab62-404b-9309-7b0fba8663b0" name="Changes" comment="Adding basic Event structure">
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/game/eventService/event/impl/EventServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/game/eventService/event/impl/EventServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,16 +42,17 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHome" value="Use Maven wrapper" />
-        <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProjectId" id="2Z7cO87W3EGzW6CfMqWVDXcQrWm" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
     <option name="sortByType" value="true" />
+    <option name="sortKey" value="BY_TYPE" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
@@ -188,26 +189,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="gameDirectory" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="gameDirectory" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
+      <item itemvalue="Application.GameDirectoryWithTests" />
       <item itemvalue="Application.com.gameManagement.GameManagementApplication" />
       <item itemvalue="Application.GameManagementApplication" />
       <item itemvalue="JUnit.java in gameDirectory" />
+      <item itemvalue="JUnit.StudioControllerTest.addStudio_withNotValidRequiredDTOValues_returnsStatusCode400" />
       <item itemvalue="JUnit.ReviewControllerTest.addReview_withNotValidDTOValues_returnsStatusCode400 (1)" />
       <item itemvalue="JUnit.ReviewControllerTest.addReview_withNotValidDTOValues_returnsStatusCode400" />
-      <item itemvalue="JUnit.StudioControllerTest.addStudio_withNotValidRequiredDTOValues_returnsStatusCode400 (1)" />
     </list>
     <recent_temporary>
       <list>
@@ -215,9 +204,15 @@
         <item itemvalue="Application.GameManagementApplication" />
         <item itemvalue="JUnit.ReviewControllerTest.addReview_withNotValidDTOValues_returnsStatusCode400 (1)" />
         <item itemvalue="JUnit.ReviewControllerTest.addReview_withNotValidDTOValues_returnsStatusCode400" />
-        <item itemvalue="JUnit.StudioControllerTest.addStudio_withNotValidRequiredDTOValues_returnsStatusCode400 (1)" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-e47b9c39" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

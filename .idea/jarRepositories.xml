@@ -7,14 +7,39 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="prod-ats-releases" />
+      <option name="name" value="prod-ats-releases" />
+      <option name="url" value="https://prod-294159772612.d.codeartifact.eu-west-1.amazonaws.com/maven/ats-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="prod-ats-bugfix-branches" />
+      <option name="name" value="prod-ats-bugfix-branches" />
+      <option name="url" value="https://prod-294159772612.d.codeartifact.eu-west-1.amazonaws.com/maven/ats-bugfix-branches/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="prod-ats-feature-branches" />
+      <option name="name" value="prod-ats-feature-branches" />
+      <option name="url" value="https://prod-294159772612.d.codeartifact.eu-west-1.amazonaws.com/maven/ats-feature-branches/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="prod-ats-integrations-store" />
+      <option name="name" value="prod-ats-integrations-store" />
+      <option name="url" value="https://prod-294159772612.d.codeartifact.eu-west-1.amazonaws.com/maven/ats-integrations-store/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="central" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
   </component>
 </project>
